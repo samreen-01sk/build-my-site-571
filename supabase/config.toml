@@ -1,0 +1,4 @@
+project_id = "leyxgvoqgtppdbvgqudl"
+
+[functions.detect-objects]
+verify_jwt = false

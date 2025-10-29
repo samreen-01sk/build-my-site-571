@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Camera as CameraIcon, X, Scan, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const Camera = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -64,36 +65,60 @@ const Camera = () => {
     if (ctx) {
       ctx.drawImage(video, 0, 0);
       
-      // Simulate object detection (in a real app, you'd send this to an AI service)
-      setTimeout(() => {
-        const mockObjects = [
-          "Person",
-          "Chair",
-          "Table",
-          "Book",
-          "Phone",
-          "Cup",
-          "Laptop",
-          "Pen",
-        ];
-        const randomObjects = mockObjects
-          .sort(() => Math.random() - 0.5)
-          .slice(0, Math.floor(Math.random() * 3) + 1);
+      // Convert canvas to base64 image
+      const imageData = canvas.toDataURL("image/jpeg", 0.8);
+      
+      try {
+        console.log("Sending image for detection...");
         
-        setDetectedObjects(randomObjects);
-        setIsDetecting(false);
+        const { data, error } = await supabase.functions.invoke('detect-objects', {
+          body: { image: imageData }
+        });
+
+        if (error) {
+          console.error("Error detecting objects:", error);
+          toast({
+            title: "Detection failed",
+            description: error.message || "Failed to detect objects. Please try again.",
+            variant: "destructive",
+          });
+          setIsDetecting(false);
+          return;
+        }
+
+        const detectedObjects = data.objects || [];
+        console.log("Detected objects:", detectedObjects);
+        
+        setDetectedObjects(detectedObjects);
         
         // Speak the detected objects
-        const speech = new SpeechSynthesisUtterance(
-          `Detected: ${randomObjects.join(", ")}`
-        );
-        window.speechSynthesis.speak(speech);
+        if (detectedObjects.length > 0) {
+          const speech = new SpeechSynthesisUtterance(
+            `I can see: ${detectedObjects.join(", ")}`
+          );
+          window.speechSynthesis.speak(speech);
+          
+          toast({
+            title: "Objects detected",
+            description: detectedObjects.join(", "),
+          });
+        } else {
+          toast({
+            title: "No objects detected",
+            description: "Try pointing the camera at different objects",
+          });
+        }
         
+      } catch (error) {
+        console.error("Error:", error);
         toast({
-          title: "Objects detected",
-          description: randomObjects.join(", "),
+          title: "Error",
+          description: "An error occurred during detection",
+          variant: "destructive",
         });
-      }, 1500);
+      }
+      
+      setIsDetecting(false);
     }
   };
 
@@ -121,7 +146,7 @@ const Camera = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-3 text-3xl">
               <CameraIcon className="w-8 h-8 text-primary" />
-              Object Detection Camera
+              AI Object Detection
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -203,7 +228,7 @@ const Camera = () => {
               <p>
                 <strong className="text-foreground">How to use:</strong> Grant camera access,
                 point your camera at objects, and click "Detect Objects" to identify them.
-                The app will speak the detected objects aloud.
+                The AI will analyze the image and speak the detected objects aloud.
               </p>
             </div>
           </CardContent>
