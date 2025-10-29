@@ -2,8 +2,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Camera, FileText, MessageSquare, Brain, Target, Lightbulb, Users } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -98,16 +101,18 @@ const Index = () => {
             <Button 
               size="lg" 
               className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity shadow-lg"
-              onClick={() => scrollToSection('about')}
+              onClick={() => navigate('/camera')}
             >
-              Learn More
+              <Camera className="mr-2 h-5 w-5" />
+              Try Camera Detection
             </Button>
             <Button 
               size="lg" 
               variant="outline"
-              onClick={() => scrollToSection('modules')}
+              onClick={() => scrollToSection('about')}
+              className="bg-white/90"
             >
-              Explore Modules
+              Learn More
             </Button>
           </div>
         </div>
