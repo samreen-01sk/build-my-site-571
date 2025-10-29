@@ -56,25 +56,25 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-b from-[#5B21B6] via-[#A855F7] to-[#F9A8D4]">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-background/80 backdrop-blur-md border-b border-border z-50">
+      <nav className="fixed top-0 w-full bg-[#5B21B6]/80 backdrop-blur-md border-b border-white/20 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Voice-Vision Assistant
             </h2>
             <div className="hidden md:flex gap-6">
-              <button onClick={() => scrollToSection('about')} className="text-foreground hover:text-primary transition-colors">
+              <button onClick={() => scrollToSection('about')} className="text-white/90 hover:text-white transition-colors">
                 About
               </button>
-              <button onClick={() => scrollToSection('objectives')} className="text-foreground hover:text-primary transition-colors">
+              <button onClick={() => scrollToSection('objectives')} className="text-white/90 hover:text-white transition-colors">
                 Objectives
               </button>
-              <button onClick={() => scrollToSection('modules')} className="text-foreground hover:text-primary transition-colors">
+              <button onClick={() => scrollToSection('modules')} className="text-white/90 hover:text-white transition-colors">
                 Modules
               </button>
-              <button onClick={() => scrollToSection('team')} className="text-foreground hover:text-primary transition-colors">
+              <button onClick={() => scrollToSection('team')} className="text-white/90 hover:text-white transition-colors">
                 Team
               </button>
             </div>
@@ -83,15 +83,15 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 bg-gradient-to-br from-primary/10 via-secondary/5 to-background">
+      <section className="pt-32 pb-20 px-6">
         <div className="container mx-auto text-center">
           <Badge className="mb-6 bg-gradient-to-r from-primary to-secondary text-white border-0" variant="outline">
             AI-Powered Assistive Technology
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white animate-in fade-in slide-in-from-bottom-4 duration-1000">
             Voice-Vision Assistant
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
+          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
             Empowering visually impaired individuals through intelligent computer vision and voice interaction
           </p>
           <div className="flex flex-wrap gap-4 justify-center animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
@@ -114,10 +114,10 @@ const Index = () => {
       </section>
 
       {/* Introduction & Problem Statement */}
-      <section id="about" className="py-20 px-6 bg-background">
+      <section id="about" className="py-20 px-6">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-2 gap-12">
-            <Card className="border-2 hover:shadow-xl transition-shadow">
+            <Card className="border-2 hover:shadow-xl transition-shadow bg-white/95 backdrop-blur">
               <CardHeader>
                 <div className="flex items-center gap-3 mb-2">
                   <Lightbulb className="w-8 h-8 text-primary" />
@@ -137,7 +137,7 @@ const Index = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-2 hover:shadow-xl transition-shadow bg-gradient-to-br from-primary/5 to-secondary/5">
+            <Card className="border-2 hover:shadow-xl transition-shadow bg-white/95 backdrop-blur">
               <CardHeader>
                 <div className="flex items-center gap-3 mb-2">
                   <Target className="w-8 h-8 text-secondary" />
@@ -155,17 +155,17 @@ const Index = () => {
       </section>
 
       {/* Objectives */}
-      <section id="objectives" className="py-20 px-6 bg-gradient-to-br from-muted/30 to-background">
+      <section id="objectives" className="py-20 px-6">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
               Project Objectives
             </h2>
-            <p className="text-xl text-muted-foreground">Our mission to enhance accessibility and independence</p>
+            <p className="text-xl text-white/90">Our mission to enhance accessibility and independence</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {objectives.map((objective, index) => (
-              <Card key={index} className="border-2 hover:border-primary transition-colors hover:shadow-lg">
+              <Card key={index} className="border-2 hover:border-primary transition-colors hover:shadow-lg bg-white/95 backdrop-blur">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white font-bold flex-shrink-0">
@@ -181,17 +181,17 @@ const Index = () => {
       </section>
 
       {/* Modules */}
-      <section id="modules" className="py-20 px-6 bg-background">
+      <section id="modules" className="py-20 px-6">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
               System Modules
             </h2>
-            <p className="text-xl text-muted-foreground">Modular architecture for robust performance</p>
+            <p className="text-xl text-white/90">Modular architecture for robust performance</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {modules.map((module, index) => (
-              <Card key={index} className="border-2 hover:border-primary transition-all hover:shadow-xl group">
+              <Card key={index} className="border-2 hover:border-primary transition-all hover:shadow-xl group bg-white/95 backdrop-blur">
                 <CardHeader>
                   <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                     <module.icon className="w-6 h-6 text-white" />
@@ -218,19 +218,19 @@ const Index = () => {
       </section>
 
       {/* Team Section */}
-      <section id="team" className="py-20 px-6 bg-gradient-to-br from-primary/5 to-secondary/5">
+      <section id="team" className="py-20 px-6">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
               Our Team
             </h2>
-            <p className="text-xl text-muted-foreground">Government Engineering College, Raichur</p>
-            <p className="text-lg text-muted-foreground">Department of Computer Science & Engineering</p>
+            <p className="text-xl text-white/90">Government Engineering College, Raichur</p>
+            <p className="text-lg text-white/90">Department of Computer Science & Engineering</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {team.map((member, index) => (
-              <Card key={index} className="border-2 hover:border-primary transition-colors hover:shadow-lg text-center">
+              <Card key={index} className="border-2 hover:border-primary transition-colors hover:shadow-lg text-center bg-white/95 backdrop-blur">
                 <CardHeader>
                   <div className="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-secondary mx-auto mb-3 flex items-center justify-center">
                     <Users className="w-8 h-8 text-white" />
@@ -242,7 +242,7 @@ const Index = () => {
             ))}
           </div>
 
-          <Card className="border-2 bg-gradient-to-r from-primary/10 to-secondary/10">
+          <Card className="border-2 bg-white/95 backdrop-blur">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl">Project Guide</CardTitle>
               <CardDescription className="text-lg">Dr. Shashikala P</CardDescription>
@@ -252,9 +252,9 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-border bg-background">
+      <footer className="py-8 px-6 border-t border-white/20 bg-transparent">
         <div className="container mx-auto text-center text-muted-foreground">
-          <p>© 2024 Voice-Vision Assistant Project | Government Engineering College, Raichur</p>
+          <p className="text-white/80">© 2024 Voice-Vision Assistant Project | Government Engineering College, Raichur</p>
         </div>
       </footer>
     </div>
