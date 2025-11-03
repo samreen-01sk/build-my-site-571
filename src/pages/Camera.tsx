@@ -12,7 +12,9 @@ const Camera = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [detectedObjects, setDetectedObjects] = useState<string[]>([]);
+  const [detectedText, setDetectedText] = useState<string>("");
   const [isDetecting, setIsDetecting] = useState(false);
+  const [isReadingText, setIsReadingText] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -48,6 +50,7 @@ const Camera = () => {
       videoRef.current.srcObject = null;
       setIsStreaming(false);
       setDetectedObjects([]);
+      setDetectedText("");
     }
   };
 
@@ -122,6 +125,75 @@ const Camera = () => {
     }
   };
 
+  const readText = async () => {
+    if (!videoRef.current || !canvasRef.current) return;
+
+    setIsReadingText(true);
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    
+    if (ctx) {
+      ctx.drawImage(video, 0, 0);
+      
+      // Convert canvas to base64 image
+      const imageData = canvas.toDataURL("image/jpeg", 0.8);
+      
+      try {
+        console.log("Sending image for text detection...");
+        
+        const { data, error } = await supabase.functions.invoke('detect-objects', {
+          body: { image: imageData, mode: 'text' }
+        });
+
+        if (error) {
+          console.error("Error detecting text:", error);
+          toast({
+            title: "Text detection failed",
+            description: error.message || "Failed to detect text. Please try again.",
+            variant: "destructive",
+          });
+          setIsReadingText(false);
+          return;
+        }
+
+        const detectedText = data.text || '';
+        console.log("Detected text:", detectedText);
+        
+        setDetectedText(detectedText);
+        
+        // Speak the detected text
+        if (detectedText.trim()) {
+          const speech = new SpeechSynthesisUtterance(detectedText);
+          window.speechSynthesis.speak(speech);
+          
+          toast({
+            title: "Text detected",
+            description: "Reading text aloud...",
+          });
+        } else {
+          toast({
+            title: "No text detected",
+            description: "Try pointing the camera at text",
+          });
+        }
+        
+      } catch (error) {
+        console.error("Error:", error);
+        toast({
+          title: "Error",
+          description: "An error occurred during text detection",
+          variant: "destructive",
+        });
+      }
+      
+      setIsReadingText(false);
+    }
+  };
+
   useEffect(() => {
     return () => {
       stopCamera();
@@ -186,11 +258,20 @@ const Camera = () => {
                   <Button
                     size="lg"
                     onClick={detectObjects}
-                    disabled={isDetecting}
+                    disabled={isDetecting || isReadingText}
                     className="bg-gradient-to-r from-primary to-secondary hover:opacity-90"
                   >
                     <Scan className="mr-2 h-5 w-5" />
                     {isDetecting ? "Detecting..." : "Detect Objects"}
+                  </Button>
+                  <Button
+                    size="lg"
+                    onClick={readText}
+                    disabled={isDetecting || isReadingText}
+                    className="bg-gradient-to-r from-secondary to-primary hover:opacity-90"
+                  >
+                    <Scan className="mr-2 h-5 w-5" />
+                    {isReadingText ? "Reading..." : "Read Text"}
                   </Button>
                   <Button
                     size="lg"
@@ -223,12 +304,24 @@ const Camera = () => {
               </div>
             )}
 
+            {/* Detected Text */}
+            {detectedText && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Detected Text:
+                </h3>
+                <div className="bg-muted rounded-lg p-4">
+                  <p className="text-foreground whitespace-pre-wrap">{detectedText}</p>
+                </div>
+              </div>
+            )}
+
             {/* Info */}
             <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
               <p>
                 <strong className="text-foreground">How to use:</strong> Grant camera access,
-                point your camera at objects, and click "Detect Objects" to identify them.
-                The AI will analyze the image and speak the detected objects aloud.
+                point your camera at objects or text. Click "Detect Objects" to identify objects,
+                or "Read Text" to extract and read text aloud.
               </p>
             </div>
           </CardContent>

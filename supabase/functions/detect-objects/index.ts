@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { image } = await req.json();
+    const { image, mode = 'objects' } = await req.json();
     
     if (!image) {
       throw new Error('Image data is required');
@@ -23,7 +23,18 @@ serve(async (req) => {
       throw new Error('LOVABLE_API_KEY is not configured');
     }
 
-    console.log('Calling Lovable AI for object detection...');
+    console.log(`Calling Lovable AI for ${mode} detection...`);
+
+    let systemPrompt = '';
+    let userPrompt = '';
+
+    if (mode === 'text') {
+      systemPrompt = 'You are a text extraction assistant for visually impaired users. Extract ALL visible text from images accurately. Return ONLY a JSON object with the text. Example: {"text": "Hello World"}';
+      userPrompt = 'Extract all visible text from this image. Include everything you can read.';
+    } else {
+      systemPrompt = 'You are an object detection assistant for visually impaired users. Analyze images and list ALL visible objects. Return ONLY a JSON array of object names, nothing else. Example: ["person", "chair", "table", "book"]';
+      userPrompt = 'What objects do you see in this image? List all visible objects.';
+    }
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
@@ -36,14 +47,14 @@ serve(async (req) => {
         messages: [
           {
             role: 'system',
-            content: 'You are an object detection assistant for visually impaired users. Analyze images and list ALL visible objects. Return ONLY a JSON array of object names, nothing else. Example: ["person", "chair", "table", "book"]'
+            content: systemPrompt
           },
           {
             role: 'user',
             content: [
               {
                 type: 'text',
-                text: 'What objects do you see in this image? List all visible objects.'
+                text: userPrompt
               },
               {
                 type: 'image_url',
@@ -85,29 +96,54 @@ serve(async (req) => {
     const content = data.choices[0].message.content;
     console.log('Raw AI response:', content);
     
-    // Parse the JSON array from the response
-    let objects: string[] = [];
-    try {
-      // Extract JSON array from the response
-      const jsonMatch = content.match(/\[.*\]/s);
-      if (jsonMatch) {
-        objects = JSON.parse(jsonMatch[0]);
-      } else {
-        // Fallback: split by commas if not a proper JSON array
-        objects = content.split(',').map((s: string) => s.trim().replace(/["\[\]]/g, ''));
+    if (mode === 'text') {
+      // Parse text response
+      let text = '';
+      try {
+        const jsonMatch = content.match(/\{.*\}/s);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          text = parsed.text || '';
+        } else {
+          // Fallback: use content as-is
+          text = content.trim();
+        }
+      } catch (parseError) {
+        console.error('Error parsing text:', parseError);
+        text = content.trim();
       }
-    } catch (parseError) {
-      console.error('Error parsing objects:', parseError);
-      // Fallback to splitting by common delimiters
-      objects = content.split(/[,\n]/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+
+      console.log('Detected text:', text);
+
+      return new Response(
+        JSON.stringify({ text }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    } else {
+      // Parse the JSON array from the response
+      let objects: string[] = [];
+      try {
+        // Extract JSON array from the response
+        const jsonMatch = content.match(/\[.*\]/s);
+        if (jsonMatch) {
+          objects = JSON.parse(jsonMatch[0]);
+        } else {
+          // Fallback: split by commas if not a proper JSON array
+          objects = content.split(',').map((s: string) => s.trim().replace(/["\[\]]/g, ''));
+        }
+      } catch (parseError) {
+        console.error('Error parsing objects:', parseError);
+        // Fallback to splitting by common delimiters
+        objects = content.split(/[,\n]/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+      }
+
+      console.log('Detected objects:', objects);
+
+      return new Response(
+        JSON.stringify({ objects }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
-
-    console.log('Detected objects:', objects);
-
-    return new Response(
-      JSON.stringify({ objects }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
 
   } catch (error) {
     console.error('Error in detect-objects function:', error);
