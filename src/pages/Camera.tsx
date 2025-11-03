@@ -13,8 +13,10 @@ const Camera = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [detectedObjects, setDetectedObjects] = useState<string[]>([]);
   const [detectedText, setDetectedText] = useState<string>("");
+  const [sceneDescription, setSceneDescription] = useState<string>("");
   const [isDetecting, setIsDetecting] = useState(false);
   const [isReadingText, setIsReadingText] = useState(false);
+  const [isDescribingScene, setIsDescribingScene] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -51,6 +53,7 @@ const Camera = () => {
       setIsStreaming(false);
       setDetectedObjects([]);
       setDetectedText("");
+      setSceneDescription("");
     }
   };
 
@@ -194,6 +197,75 @@ const Camera = () => {
     }
   };
 
+  const describeScene = async () => {
+    if (!videoRef.current || !canvasRef.current) return;
+
+    setIsDescribingScene(true);
+    const canvas = canvasRef.current;
+    const video = videoRef.current;
+    
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext("2d");
+    
+    if (ctx) {
+      ctx.drawImage(video, 0, 0);
+      
+      // Convert canvas to base64 image
+      const imageData = canvas.toDataURL("image/jpeg", 0.8);
+      
+      try {
+        console.log("Sending image for scene description...");
+        
+        const { data, error } = await supabase.functions.invoke('detect-objects', {
+          body: { image: imageData, mode: 'scene' }
+        });
+
+        if (error) {
+          console.error("Error describing scene:", error);
+          toast({
+            title: "Scene description failed",
+            description: error.message || "Failed to describe scene. Please try again.",
+            variant: "destructive",
+          });
+          setIsDescribingScene(false);
+          return;
+        }
+
+        const description = data.description || '';
+        console.log("Scene description:", description);
+        
+        setSceneDescription(description);
+        
+        // Speak the scene description
+        if (description.trim()) {
+          const speech = new SpeechSynthesisUtterance(description);
+          window.speechSynthesis.speak(speech);
+          
+          toast({
+            title: "Scene described",
+            description: "Playing description...",
+          });
+        } else {
+          toast({
+            title: "No scene detected",
+            description: "Try pointing the camera at a different scene",
+          });
+        }
+        
+      } catch (error) {
+        console.error("Error:", error);
+        toast({
+          title: "Error",
+          description: "An error occurred during scene description",
+          variant: "destructive",
+        });
+      }
+      
+      setIsDescribingScene(false);
+    }
+  };
+
   useEffect(() => {
     return () => {
       stopCamera();
@@ -258,7 +330,7 @@ const Camera = () => {
                   <Button
                     size="lg"
                     onClick={detectObjects}
-                    disabled={isDetecting || isReadingText}
+                    disabled={isDetecting || isReadingText || isDescribingScene}
                     className="bg-gradient-to-r from-primary to-secondary hover:opacity-90"
                   >
                     <Scan className="mr-2 h-5 w-5" />
@@ -267,11 +339,20 @@ const Camera = () => {
                   <Button
                     size="lg"
                     onClick={readText}
-                    disabled={isDetecting || isReadingText}
+                    disabled={isDetecting || isReadingText || isDescribingScene}
                     className="bg-gradient-to-r from-secondary to-primary hover:opacity-90"
                   >
                     <Scan className="mr-2 h-5 w-5" />
                     {isReadingText ? "Reading..." : "Read Text"}
+                  </Button>
+                  <Button
+                    size="lg"
+                    onClick={describeScene}
+                    disabled={isDetecting || isReadingText || isDescribingScene}
+                    className="bg-gradient-to-r from-primary via-secondary to-primary hover:opacity-90"
+                  >
+                    <Scan className="mr-2 h-5 w-5" />
+                    {isDescribingScene ? "Describing..." : "Describe Scene"}
                   </Button>
                   <Button
                     size="lg"
@@ -316,12 +397,25 @@ const Camera = () => {
               </div>
             )}
 
+            {/* Scene Description */}
+            {sceneDescription && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-semibold text-foreground">
+                  Scene Description:
+                </h3>
+                <div className="bg-muted rounded-lg p-4">
+                  <p className="text-foreground">{sceneDescription}</p>
+                </div>
+              </div>
+            )}
+
             {/* Info */}
             <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
               <p>
                 <strong className="text-foreground">How to use:</strong> Grant camera access,
-                point your camera at objects or text. Click "Detect Objects" to identify objects,
-                or "Read Text" to extract and read text aloud.
+                then point your camera at objects or text. Use "Detect Objects" to identify objects,
+                "Read Text" to extract text, or "Describe Scene" for a detailed description.
+                All features provide audio and text output.
               </p>
             </div>
           </CardContent>

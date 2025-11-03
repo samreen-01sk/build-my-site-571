@@ -31,6 +31,9 @@ serve(async (req) => {
     if (mode === 'text') {
       systemPrompt = 'You are a text extraction assistant for visually impaired users. Extract ALL visible text from images accurately. Return ONLY a JSON object with the text. Example: {"text": "Hello World"}';
       userPrompt = 'Extract all visible text from this image. Include everything you can read.';
+    } else if (mode === 'scene') {
+      systemPrompt = 'You are a scene description assistant for visually impaired users. Provide detailed, clear descriptions of images including the setting, people, objects, activities, colors, and mood. Return ONLY a JSON object. Example: {"description": "A sunny park with..."}';
+      userPrompt = 'Describe this scene in detail. Include the setting, any people or objects, what they are doing, colors, lighting, and overall atmosphere.';
     } else {
       systemPrompt = 'You are an object detection assistant for visually impaired users. Analyze images and list ALL visible objects. Return ONLY a JSON array of object names, nothing else. Example: ["person", "chair", "table", "book"]';
       userPrompt = 'What objects do you see in this image? List all visible objects.';
@@ -105,7 +108,6 @@ serve(async (req) => {
           const parsed = JSON.parse(jsonMatch[0]);
           text = parsed.text || '';
         } else {
-          // Fallback: use content as-is
           text = content.trim();
         }
       } catch (parseError) {
@@ -117,6 +119,28 @@ serve(async (req) => {
 
       return new Response(
         JSON.stringify({ text }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    } else if (mode === 'scene') {
+      // Parse scene description
+      let description = '';
+      try {
+        const jsonMatch = content.match(/\{.*\}/s);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          description = parsed.description || '';
+        } else {
+          description = content.trim();
+        }
+      } catch (parseError) {
+        console.error('Error parsing scene description:', parseError);
+        description = content.trim();
+      }
+
+      console.log('Scene description:', description);
+
+      return new Response(
+        JSON.stringify({ description }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } else {
