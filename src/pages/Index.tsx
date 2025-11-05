@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Eye, Camera, FileText, MessageSquare, Brain, Target, Lightbulb, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ChatBot } from "@/components/ChatBot";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -262,6 +263,8 @@ const Index = () => {
           <p className="text-white/80">© 2024 Voice-Vision Assistant Project | Government Engineering College, Raichur</p>
         </div>
       </footer>
+
+      <ChatBot />
     </div>
   );
 };
