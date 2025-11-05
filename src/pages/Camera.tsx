@@ -13,7 +13,8 @@ const Camera = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [detectedObjects, setDetectedObjects] = useState<string[]>([]);
   const [detectedText, setDetectedText] = useState<string>("");
-  const [sceneDescription, setSceneDescription] = useState<string>("");
+  const [sceneLabel, setSceneLabel] = useState<string>("");
+  const [sceneConfidence, setSceneConfidence] = useState<number>(0);
   const [isDetecting, setIsDetecting] = useState(false);
   const [isReadingText, setIsReadingText] = useState(false);
   const [isDescribingScene, setIsDescribingScene] = useState(false);
@@ -53,7 +54,8 @@ const Camera = () => {
       setIsStreaming(false);
       setDetectedObjects([]);
       setDetectedText("");
-      setSceneDescription("");
+      setSceneLabel("");
+      setSceneConfidence(0);
     }
   };
 
@@ -224,34 +226,31 @@ const Camera = () => {
         if (error) {
           console.error("Error describing scene:", error);
           toast({
-            title: "Scene description failed",
-            description: error.message || "Failed to describe scene. Please try again.",
+            title: "Scene detection failed",
+            description: error.message || "Failed to detect scene. Please try again.",
             variant: "destructive",
           });
           setIsDescribingScene(false);
           return;
         }
 
-        const description = data.description || '';
-        console.log("Scene description:", description);
+        const label = data.label || 'unknown scene';
+        const confidence = data.confidence || 0;
+        console.log("Scene label:", label, "Confidence:", confidence);
         
-        setSceneDescription(description);
+        setSceneLabel(label);
+        setSceneConfidence(confidence);
         
-        // Speak the scene description
-        if (description.trim()) {
-          const speech = new SpeechSynthesisUtterance(description);
-          window.speechSynthesis.speak(speech);
-          
-          toast({
-            title: "Scene described",
-            description: "Playing description...",
-          });
-        } else {
-          toast({
-            title: "No scene detected",
-            description: "Try pointing the camera at a different scene",
-          });
-        }
+        // Speak the scene label and confidence
+        const confidencePercent = Math.round(confidence * 100);
+        const spokenText = `Scene detected: ${label}, confidence ${confidencePercent} percent`;
+        const speech = new SpeechSynthesisUtterance(spokenText);
+        window.speechSynthesis.speak(speech);
+        
+        toast({
+          title: "Scene detected",
+          description: `${label} (${confidencePercent}% confidence)`,
+        });
         
       } catch (error) {
         console.error("Error:", error);
@@ -397,14 +396,19 @@ const Camera = () => {
               </div>
             )}
 
-            {/* Scene Description */}
-            {sceneDescription && (
+            {/* Scene Detection */}
+            {sceneLabel && (
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold text-foreground">
-                  Scene Description:
+                  Scene Detection:
                 </h3>
-                <div className="bg-muted rounded-lg p-4">
-                  <p className="text-foreground">{sceneDescription}</p>
+                <div className="bg-muted rounded-lg p-4 space-y-2">
+                  <p className="text-foreground">
+                    <span className="font-medium">Label:</span> {sceneLabel}
+                  </p>
+                  <p className="text-foreground">
+                    <span className="font-medium">Confidence:</span> {(sceneConfidence * 100).toFixed(1)}%
+                  </p>
                 </div>
               </div>
             )}

@@ -32,8 +32,8 @@ serve(async (req) => {
       systemPrompt = 'You are a text extraction assistant for visually impaired users. Extract ALL visible text from images accurately. Return ONLY a JSON object with the text. Example: {"text": "Hello World"}';
       userPrompt = 'Extract all visible text from this image. Include everything you can read.';
     } else if (mode === 'scene') {
-      systemPrompt = 'You are a scene description assistant for visually impaired users. Provide detailed, clear descriptions of images including the setting, people, objects, activities, colors, and mood. Return ONLY a JSON object. Example: {"description": "A sunny park with..."}';
-      userPrompt = 'Describe this scene in detail. Include the setting, any people or objects, what they are doing, colors, lighting, and overall atmosphere.';
+      systemPrompt = 'You are a scene classification assistant for visually impaired users. Analyze the scene and provide a concise label and confidence score. Return ONLY a JSON object. Example: {"label": "indoor office", "confidence": 0.95}';
+      userPrompt = 'Classify this scene with a brief label (e.g., "indoor office", "outdoor park", "street view", "kitchen", "bedroom") and a confidence score between 0 and 1.';
     } else {
       systemPrompt = 'You are an object detection assistant for visually impaired users. Analyze images and list ALL visible objects. Return ONLY a JSON array of object names, nothing else. Example: ["person", "chair", "table", "book"]';
       userPrompt = 'What objects do you see in this image? List all visible objects.';
@@ -122,25 +122,24 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } else if (mode === 'scene') {
-      // Parse scene description
-      let description = '';
+      // Parse scene label and confidence
+      let label = 'unknown scene';
+      let confidence = 0;
       try {
         const jsonMatch = content.match(/\{.*\}/s);
         if (jsonMatch) {
           const parsed = JSON.parse(jsonMatch[0]);
-          description = parsed.description || '';
-        } else {
-          description = content.trim();
+          label = parsed.label || 'unknown scene';
+          confidence = parsed.confidence || 0;
         }
       } catch (parseError) {
-        console.error('Error parsing scene description:', parseError);
-        description = content.trim();
+        console.error('Error parsing scene data:', parseError);
       }
 
-      console.log('Scene description:', description);
+      console.log('Scene label:', label, 'Confidence:', confidence);
 
       return new Response(
-        JSON.stringify({ description }),
+        JSON.stringify({ label, confidence }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } else {
