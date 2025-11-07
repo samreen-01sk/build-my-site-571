@@ -55,25 +55,31 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#5B21B6] via-[#A855F7] to-[#F9A8D4]">
+    <div className="min-h-screen bg-gradient-to-br from-background via-[hsl(228,60%,12%)] to-[hsl(271,70%,15%)] relative overflow-hidden">
+      {/* Animated background effects */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-[120px] animate-pulse delay-1000" />
+      </div>
+
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-[#5B21B6]/80 backdrop-blur-md border-b border-white/20 z-50">
+      <nav className="fixed top-0 w-full bg-card/40 backdrop-blur-xl border-b border-border/50 z-50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-pulse">
               Voice-Vision Assistant
             </h2>
-            <div className="hidden md:flex gap-6">
-              <button onClick={() => scrollToSection('about')} className="text-white/90 hover:text-white transition-colors">
+            <div className="hidden md:flex gap-8">
+              <button onClick={() => scrollToSection('about')} className="text-foreground/80 hover:text-primary transition-colors font-medium">
                 About
               </button>
-              <button onClick={() => scrollToSection('objectives')} className="text-white/90 hover:text-white transition-colors">
+              <button onClick={() => scrollToSection('objectives')} className="text-foreground/80 hover:text-primary transition-colors font-medium">
                 Objectives
               </button>
-              <button onClick={() => scrollToSection('modules')} className="text-white/90 hover:text-white transition-colors">
+              <button onClick={() => scrollToSection('modules')} className="text-foreground/80 hover:text-primary transition-colors font-medium">
                 Modules
               </button>
-              <button onClick={() => scrollToSection('team')} className="text-white/90 hover:text-white transition-colors">
+              <button onClick={() => scrollToSection('team')} className="text-foreground/80 hover:text-primary transition-colors font-medium">
                 Team
               </button>
             </div>
@@ -82,21 +88,21 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6">
-        <div className="container mx-auto text-center">
-          <Badge className="mb-6 bg-gradient-to-r from-primary to-secondary text-white border-0" variant="outline">
+      <section className="pt-32 pb-20 px-6 relative">
+        <div className="container mx-auto text-center relative z-10">
+          <Badge className="mb-6 bg-primary/20 text-primary border-primary/50 backdrop-blur-sm px-6 py-2 text-sm font-semibold" variant="outline">
             AI-Powered Assistive Technology
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-white animate-in fade-in slide-in-from-bottom-4 duration-1000">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 leading-tight">
             Voice-Vision Assistant
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 mb-8 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
+          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
             Empowering visually impaired individuals through intelligent computer vision and voice interaction
           </p>
           <div className="flex flex-wrap gap-4 justify-center animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
             <Button 
               size="lg" 
-              className="bg-gradient-to-r from-primary to-secondary hover:opacity-90 transition-opacity shadow-lg"
+              className="bg-gradient-to-r from-primary to-secondary hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300 text-lg px-8 py-6 font-semibold"
               onClick={() => navigate('/camera')}
             >
               <Camera className="mr-2 h-5 w-5" />
@@ -106,7 +112,7 @@ const Index = () => {
               size="lg" 
               variant="outline"
               onClick={() => scrollToSection('about')}
-              className="bg-white/90"
+              className="border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary backdrop-blur-sm text-lg px-8 py-6 font-semibold"
             >
               Learn More
             </Button>
@@ -115,19 +121,21 @@ const Index = () => {
       </section>
 
       {/* Introduction */}
-      <section id="about" className="py-20 px-6">
+      <section id="about" className="py-20 px-6 relative">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
-            <Card className="border-2 hover:shadow-xl transition-shadow bg-white/95 backdrop-blur">
+            <Card className="border border-border/50 hover:shadow-[0_0_50px_rgba(59,130,246,0.2)] transition-all duration-500 bg-card/60 backdrop-blur-xl">
               <CardHeader>
                 <div className="flex items-center gap-3 mb-2">
-                  <Lightbulb className="w-8 h-8 text-primary" />
-                  <CardTitle className="text-3xl">Introduction</CardTitle>
+                  <div className="p-3 rounded-lg bg-primary/20 backdrop-blur-sm">
+                    <Lightbulb className="w-8 h-8 text-primary" />
+                  </div>
+                  <CardTitle className="text-3xl font-bold text-foreground">Introduction</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4 text-muted-foreground">
+              <CardContent className="space-y-4 text-muted-foreground text-lg">
                 <p>
-                  Globally, around <strong className="text-foreground">285 million people</strong> are visually impaired, facing challenges in social interaction and access to information.
+                  Globally, around <strong className="text-primary font-bold">285 million people</strong> are visually impaired, facing challenges in social interaction and access to information.
                 </p>
                 <p>
                   Assistive technologies, especially those integrating voice recognition and computer vision, are crucial for enhancing independence.
@@ -142,23 +150,23 @@ const Index = () => {
       </section>
 
       {/* Objectives */}
-      <section id="objectives" className="py-20 px-6">
+      <section id="objectives" className="py-20 px-6 relative">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
               Project Objectives
             </h2>
-            <p className="text-xl text-white/90">Our mission to enhance accessibility and independence</p>
+            <p className="text-xl text-muted-foreground">Our mission to enhance accessibility and independence</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {objectives.map((objective, index) => (
-              <Card key={index} className="border-2 hover:border-primary transition-colors hover:shadow-lg bg-white/95 backdrop-blur">
+              <Card key={index} className="border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] bg-card/60 backdrop-blur-xl group">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-white font-bold flex-shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-foreground font-bold flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
                       {index + 1}
                     </div>
-                    <p className="text-foreground">{objective}</p>
+                    <p className="text-foreground/90 leading-relaxed">{objective}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -168,23 +176,25 @@ const Index = () => {
       </section>
 
       {/* Modules */}
-      <section id="modules" className="py-20 px-6">
+      <section id="modules" className="py-20 px-6 relative">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
               System Modules
             </h2>
-            <p className="text-xl text-white/90">Modular architecture for robust performance</p>
+            <p className="text-xl text-muted-foreground">Modular architecture for robust performance</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {modules.map((module, index) => (
-              <Card key={index} className="border-2 hover:border-primary transition-all hover:shadow-xl group bg-white/95 backdrop-blur">
+              <Card key={index} className="border border-border/50 hover:border-primary/50 transition-all duration-500 hover:shadow-[0_0_40px_rgba(59,130,246,0.2)] group bg-card/60 backdrop-blur-xl">
                 <CardHeader>
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-r from-primary to-secondary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                    <module.icon className="w-6 h-6 text-white" />
+                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-primary/50">
+                    <module.icon className="w-7 h-7 text-primary-foreground" />
                   </div>
-                  <CardTitle className="text-xl">{module.title}</CardTitle>
-                  <CardDescription>{module.description}</CardDescription>
+                  <CardTitle className="text-xl text-foreground font-bold">{module.title}</CardTitle>
+                  <CardDescription className="text-muted-foreground text-base leading-relaxed">
+                    {module.description}
+                  </CardDescription>
                 </CardHeader>
               </Card>
             ))}
@@ -193,43 +203,43 @@ const Index = () => {
       </section>
 
       {/* Team Section */}
-      <section id="team" className="py-20 px-6">
+      <section id="team" className="py-20 px-6 relative">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
               Our Team
             </h2>
-            <p className="text-xl text-white/90">Government Engineering College, Raichur</p>
-            <p className="text-lg text-white/90">Department of Computer Science & Engineering</p>
+            <p className="text-xl text-muted-foreground">Government Engineering College, Raichur</p>
+            <p className="text-lg text-muted-foreground">Department of Computer Science & Engineering</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {team.map((member, index) => (
-              <Card key={index} className="border-2 hover:border-primary transition-colors hover:shadow-lg text-center bg-white/95 backdrop-blur">
+              <Card key={index} className="border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] text-center bg-card/60 backdrop-blur-xl group">
                 <CardHeader>
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-r from-primary to-secondary mx-auto mb-3 flex items-center justify-center">
-                    <Users className="w-8 h-8 text-white" />
+                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary mx-auto mb-3 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/50">
+                    <Users className="w-8 h-8 text-primary-foreground" />
                   </div>
-                  <CardTitle className="text-lg">{member.name}</CardTitle>
-                  <CardDescription>{member.id}</CardDescription>
+                  <CardTitle className="text-lg text-foreground font-bold">{member.name}</CardTitle>
+                  <CardDescription className="text-muted-foreground">{member.id}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
           </div>
 
-          <Card className="border-2 bg-white/95 backdrop-blur">
+          <Card className="border border-border/50 bg-card/60 backdrop-blur-xl hover:shadow-[0_0_40px_rgba(59,130,246,0.2)] transition-all duration-500">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl">Project Guide</CardTitle>
-              <CardDescription className="text-lg">Dr. Shashikala P</CardDescription>
+              <CardTitle className="text-2xl text-foreground font-bold">Project Guide</CardTitle>
+              <CardDescription className="text-lg text-muted-foreground">Dr. Shashikala P</CardDescription>
             </CardHeader>
           </Card>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-white/20 bg-transparent">
-        <div className="container mx-auto text-center text-muted-foreground">
-          <p className="text-white/80">© 2024 Voice-Vision Assistant Project | Government Engineering College, Raichur</p>
+      <footer className="py-8 px-6 border-t border-border/50 bg-card/20 backdrop-blur-sm relative">
+        <div className="container mx-auto text-center">
+          <p className="text-muted-foreground">© 2024 Voice-Vision Assistant Project | Government Engineering College, Raichur</p>
         </div>
       </footer>
 
