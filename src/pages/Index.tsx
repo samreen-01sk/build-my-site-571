@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Camera, FileText, MessageSquare, Brain, Target, Lightbulb, Users } from "lucide-react";
+import { Eye, Camera, FileText, MessageSquare, Brain, Lightbulb, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ChatBot } from "@/components/ChatBot";
 
@@ -16,32 +16,27 @@ const Index = () => {
     {
       icon: Camera,
       title: "Camera Interface",
-      description: "Real-time frame capture and processing with seamless integration across all detection modules.",
-      methods: ["start_camera()", "read_frame()", "stop_camera()"]
+      description: "Real-time frame capture and processing with seamless integration across all detection modules."
     },
     {
       icon: Eye,
       title: "Object Detection",
-      description: "Advanced AI-powered object recognition using TensorFlow Lite for real-time identification.",
-      methods: ["load_model()", "detect_objects()"]
+      description: "Advanced AI-powered object recognition using TensorFlow Lite for real-time identification."
     },
     {
       icon: Brain,
       title: "Scene Description",
-      description: "Intelligent scene analysis providing comprehensive environmental context to users.",
-      methods: ["describe_scene()", "analyze_context()"]
+      description: "Intelligent scene analysis providing comprehensive environmental context to users."
     },
     {
       icon: FileText,
       title: "Text Recognition (OCR)",
-      description: "Optical character recognition for both printed and handwritten text with TTS output.",
-      methods: ["extract_text()", "text_to_speech()"]
+      description: "Optical character recognition for both printed and handwritten text with TTS output."
     },
     {
       icon: MessageSquare,
       title: "Chatbot Assistant",
-      description: "Interactive AI chatbot for personalized assistance and user queries.",
-      methods: ["process_query()", "generate_response()"]
+      description: "Interactive AI chatbot for personalized assistance and user queries."
     }
   ];
 
@@ -119,10 +114,10 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Introduction & Problem Statement */}
+      {/* Introduction */}
       <section id="about" className="py-20 px-6">
         <div className="container mx-auto">
-          <div className="grid md:grid-cols-2 gap-12">
+          <div className="max-w-4xl mx-auto">
             <Card className="border-2 hover:shadow-xl transition-shadow bg-white/95 backdrop-blur">
               <CardHeader>
                 <div className="flex items-center gap-3 mb-2">
@@ -139,20 +134,6 @@ const Index = () => {
                 </p>
                 <p>
                   Key technologies like AI, machine learning, and OCR enable accurate object detection, scene interpretation, and text-to-speech conversion.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="border-2 hover:shadow-xl transition-shadow bg-white/95 backdrop-blur">
-              <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <Target className="w-8 h-8 text-secondary" />
-                  <CardTitle className="text-3xl">Problem Statement</CardTitle>
-                </div>
-              </CardHeader>
-              <CardContent className="text-muted-foreground">
-                <p>
-                  Visually impaired individuals face significant challenges in recognizing objects, reading text, and understanding their surroundings. Existing assistive solutions are often <strong className="text-foreground">limited, expensive, or lack real-time functionality</strong>, creating a need for an affordable and intelligent voice-vision assistant.
                 </p>
               </CardContent>
             </Card>
@@ -205,18 +186,6 @@ const Index = () => {
                   <CardTitle className="text-xl">{module.title}</CardTitle>
                   <CardDescription>{module.description}</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="space-y-2">
-                    <p className="text-sm font-semibold text-foreground">Key Methods:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {module.methods.map((method, idx) => (
-                        <Badge key={idx} variant="secondary" className="text-xs">
-                          {method}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </CardContent>
               </Card>
             ))}
           </div>
