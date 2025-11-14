@@ -32,8 +32,8 @@ serve(async (req) => {
       systemPrompt = 'You are a text extraction assistant for visually impaired users. Extract ALL visible text from images accurately. Return ONLY a JSON object with the text. Example: {"text": "Hello World"}';
       userPrompt = 'Extract all visible text from this image. Include everything you can read.';
     } else if (mode === 'scene') {
-      systemPrompt = 'You are a scene classification assistant for visually impaired users. Analyze the scene and provide a concise label and confidence score. Return ONLY a JSON object. Example: {"label": "indoor office", "confidence": 0.95}';
-      userPrompt = 'Classify this scene with a brief label (e.g., "indoor office", "outdoor park", "street view", "kitchen", "bedroom") and a confidence score between 0 and 1.';
+      systemPrompt = 'You are a detailed scene description assistant for visually impaired users. Provide comprehensive scene descriptions including: people and their activities, objects and their arrangements, the setting/environment, lighting, and any notable details. Return ONLY a JSON object. Example: {"description": "Three people sitting around a wooden table in a bright office, having a discussion. One person is gesturing while talking. The room has white walls, large windows with natural light, and a whiteboard in the background.", "confidence": 0.95}';
+      userPrompt = 'Describe this scene in detail. Include: what people are doing (if any), the environment (indoor/outdoor and specific location type), objects present, their arrangement, lighting conditions, and any other notable details that would help a visually impaired person understand the scene.';
     } else {
       systemPrompt = 'You are an object detection assistant for visually impaired users. Analyze images and list ALL visible objects. Return ONLY a JSON array of object names, nothing else. Example: ["person", "chair", "table", "book"]';
       userPrompt = 'What objects do you see in this image? List all visible objects.';
