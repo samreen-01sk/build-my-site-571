@@ -13,7 +13,7 @@ const Camera = () => {
   const [isStreaming, setIsStreaming] = useState(false);
   const [detectedObjects, setDetectedObjects] = useState<string[]>([]);
   const [detectedText, setDetectedText] = useState<string>("");
-  const [sceneLabel, setSceneLabel] = useState<string>("");
+  const [sceneDescription, setSceneDescription] = useState<string>("");
   const [sceneConfidence, setSceneConfidence] = useState<number>(0);
   const [isDetecting, setIsDetecting] = useState(false);
   const [isReadingText, setIsReadingText] = useState(false);
@@ -54,7 +54,7 @@ const Camera = () => {
       setIsStreaming(false);
       setDetectedObjects([]);
       setDetectedText("");
-      setSceneLabel("");
+      setSceneDescription("");
       setSceneConfidence(0);
     }
   };
@@ -234,22 +234,20 @@ const Camera = () => {
           return;
         }
 
-        const label = data.label || 'unknown scene';
+        const description = data.description || 'No description available';
         const confidence = data.confidence || 0;
-        console.log("Scene label:", label, "Confidence:", confidence);
+        console.log("Scene description:", description, "Confidence:", confidence);
         
-        setSceneLabel(label);
+        setSceneDescription(description);
         setSceneConfidence(confidence);
         
-        // Speak the scene label and confidence
-        const confidencePercent = Math.round(confidence * 100);
-        const spokenText = `Scene detected: ${label}, confidence ${confidencePercent} percent`;
-        const speech = new SpeechSynthesisUtterance(spokenText);
+        // Speak the detailed scene description
+        const speech = new SpeechSynthesisUtterance(description);
         window.speechSynthesis.speak(speech);
         
         toast({
-          title: "Scene detected",
-          description: `${label} (${confidencePercent}% confidence)`,
+          title: "Scene described",
+          description: description.substring(0, 100) + (description.length > 100 ? "..." : ""),
         });
         
       } catch (error) {
@@ -396,17 +394,17 @@ const Camera = () => {
               </div>
             )}
 
-            {/* Scene Detection */}
-            {sceneLabel && (
+            {/* Scene Description */}
+            {sceneDescription && (
               <div className="space-y-3">
                 <h3 className="text-lg font-semibold text-foreground">
-                  Scene Detection:
+                  Scene Description:
                 </h3>
                 <div className="bg-muted rounded-lg p-4 space-y-2">
-                  <p className="text-foreground">
-                    <span className="font-medium">Label:</span> {sceneLabel}
+                  <p className="text-foreground whitespace-pre-wrap">
+                    {sceneDescription}
                   </p>
-                  <p className="text-foreground">
+                  <p className="text-sm text-muted-foreground mt-2">
                     <span className="font-medium">Confidence:</span> {(sceneConfidence * 100).toFixed(1)}%
                   </p>
                 </div>
