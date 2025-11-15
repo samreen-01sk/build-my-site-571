@@ -12,6 +12,7 @@ const Camera = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [detectedObjects, setDetectedObjects] = useState<string[]>([]);
+  const [personCount, setPersonCount] = useState<number>(0);
   const [detectedText, setDetectedText] = useState<string>("");
   const [sceneDescription, setSceneDescription] = useState<string>("");
   const [sceneConfidence, setSceneConfidence] = useState<number>(0);
@@ -53,6 +54,7 @@ const Camera = () => {
       videoRef.current.srcObject = null;
       setIsStreaming(false);
       setDetectedObjects([]);
+      setPersonCount(0);
       setDetectedText("");
       setSceneDescription("");
       setSceneConfidence(0);
@@ -95,20 +97,29 @@ const Camera = () => {
         }
 
         const detectedObjects = data.objects || [];
+        const personCount = data.personCount || 0;
         console.log("Detected objects:", detectedObjects);
+        console.log("Person count:", personCount);
         
         setDetectedObjects(detectedObjects);
+        setPersonCount(personCount);
         
-        // Speak the detected objects
+        // Speak the detected objects and person count
         if (detectedObjects.length > 0) {
-          const speech = new SpeechSynthesisUtterance(
-            `I can see: ${detectedObjects.join(", ")}`
-          );
+          let spokenText = "";
+          if (personCount > 0) {
+            spokenText = `I can see ${personCount} ${personCount === 1 ? 'person' : 'people'}. `;
+          }
+          spokenText += `Objects detected: ${detectedObjects.join(", ")}`;
+          
+          const speech = new SpeechSynthesisUtterance(spokenText);
           window.speechSynthesis.speak(speech);
           
           toast({
             title: "Objects detected",
-            description: detectedObjects.join(", "),
+            description: personCount > 0 
+              ? `${personCount} ${personCount === 1 ? 'person' : 'people'}, ${detectedObjects.join(", ")}`
+              : detectedObjects.join(", "),
           });
         } else {
           toast({
@@ -366,9 +377,16 @@ const Camera = () => {
             {/* Detected Objects */}
             {detectedObjects.length > 0 && (
               <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-foreground">
-                  Detected Objects:
-                </h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-foreground">
+                    Detected Objects:
+                  </h3>
+                  {personCount > 0 && (
+                    <Badge variant="default" className="text-base py-2 px-4">
+                      {personCount} {personCount === 1 ? 'person' : 'people'}
+                    </Badge>
+                  )}
+                </div>
                 <div className="flex flex-wrap gap-2">
                   {detectedObjects.map((object, index) => (
                     <Badge
