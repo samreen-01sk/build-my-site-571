@@ -35,8 +35,8 @@ serve(async (req) => {
       systemPrompt = 'You are a detailed scene description assistant for visually impaired users. Provide comprehensive scene descriptions including: people and their activities, objects and their arrangements, the setting/environment, lighting, and any notable details. Return ONLY a JSON object. Example: {"description": "Three people sitting around a wooden table in a bright office, having a discussion. One person is gesturing while talking. The room has white walls, large windows with natural light, and a whiteboard in the background.", "confidence": 0.95}';
       userPrompt = 'Describe this scene in detail. Include: what people are doing (if any), the environment (indoor/outdoor and specific location type), objects present, their arrangement, lighting conditions, and any other notable details that would help a visually impaired person understand the scene.';
     } else {
-      systemPrompt = 'You are an object detection assistant for visually impaired users. Analyze images and list ALL visible objects. Return ONLY a JSON array of object names, nothing else. Example: ["person", "chair", "table", "book"]';
-      userPrompt = 'What objects do you see in this image? List all visible objects.';
+      systemPrompt = 'You are an object detection assistant for visually impaired users. Analyze images and list ALL visible objects accurately and count people. Return ONLY a JSON object with two fields: "objects" (array of all detected objects) and "personCount" (number of people detected). Example: {"objects": ["person", "person", "chair", "table", "book", "laptop"], "personCount": 2}';
+      userPrompt = 'Analyze this image carefully. List ALL visible objects and count how many people are in the image. Be specific and accurate with object names.';
     }
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -143,29 +143,40 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } else {
-      // Parse the JSON array from the response
-      let objects: string[] = [];
+      const cleanedContent = content.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      console.log('Raw AI response:', cleanedContent);
+      
       try {
-        // Extract JSON array from the response
-        const jsonMatch = content.match(/\[.*\]/s);
-        if (jsonMatch) {
-          objects = JSON.parse(jsonMatch[0]);
-        } else {
-          // Fallback: split by commas if not a proper JSON array
-          objects = content.split(',').map((s: string) => s.trim().replace(/["\[\]]/g, ''));
+        const result = JSON.parse(cleanedContent);
+        const objects = result.objects || [];
+        const personCount = result.personCount || 0;
+        console.log('Detected objects:', objects);
+        console.log('Person count:', personCount);
+        
+        return new Response(
+          JSON.stringify({ objects, personCount }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      } catch (e) {
+        console.error('Failed to parse objects response:', e);
+        // Fallback: try to extract as array
+        try {
+          const jsonMatch = cleanedContent.match(/\[.*\]/s);
+          if (jsonMatch) {
+            const objects = JSON.parse(jsonMatch[0]);
+            return new Response(
+              JSON.stringify({ objects, personCount: 0 }),
+              { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+            );
+          }
+        } catch (fallbackError) {
+          console.error('Fallback parsing also failed:', fallbackError);
         }
-      } catch (parseError) {
-        console.error('Error parsing objects:', parseError);
-        // Fallback to splitting by common delimiters
-        objects = content.split(/[,\n]/).map((s: string) => s.trim()).filter((s: string) => s.length > 0);
+        return new Response(
+          JSON.stringify({ objects: [], personCount: 0 }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
       }
-
-      console.log('Detected objects:', objects);
-
-      return new Response(
-        JSON.stringify({ objects }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
     }
 
   } catch (error) {
