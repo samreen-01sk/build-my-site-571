@@ -122,24 +122,29 @@ serve(async (req) => {
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } else if (mode === 'scene') {
-      // Parse scene label and confidence
-      let label = 'unknown scene';
+      // Parse scene description and confidence
+      let description = '';
       let confidence = 0;
       try {
         const jsonMatch = content.match(/\{.*\}/s);
         if (jsonMatch) {
           const parsed = JSON.parse(jsonMatch[0]);
-          label = parsed.label || 'unknown scene';
+          description = parsed.description || '';
           confidence = parsed.confidence || 0;
+        } else {
+          // Fallback: use raw content as description
+          description = content.trim();
         }
       } catch (parseError) {
         console.error('Error parsing scene data:', parseError);
+        // Fallback: use raw content as description
+        description = content.trim();
       }
 
-      console.log('Scene label:', label, 'Confidence:', confidence);
+      console.log('Scene description:', description, 'Confidence:', confidence);
 
       return new Response(
-        JSON.stringify({ label, confidence }),
+        JSON.stringify({ description, confidence }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } else {
