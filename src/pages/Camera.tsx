@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Camera as CameraIcon, X, Scan, ArrowLeft } from "lucide-react";
+import { Camera as CameraIcon, X, Scan, ArrowLeft, Mic, MicOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 const Camera = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const recognitionRef = useRef<any>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [detectedObjects, setDetectedObjects] = useState<string[]>([]);
   const [personCount, setPersonCount] = useState<number>(0);
@@ -19,6 +20,7 @@ const Camera = () => {
   const [isDetecting, setIsDetecting] = useState(false);
   const [isReadingText, setIsReadingText] = useState(false);
   const [isDescribingScene, setIsDescribingScene] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -274,9 +276,102 @@ const Camera = () => {
     }
   };
 
+  const startVoiceRecognition = () => {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      toast({
+        title: "Not supported",
+        description: "Voice recognition is not supported in your browser",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+    
+    recognition.continuous = true;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = () => {
+      setIsListening(true);
+      toast({
+        title: "Listening...",
+        description: "Say 'detect objects', 'read text', or 'describe scene'",
+      });
+      
+      const speech = new SpeechSynthesisUtterance("Voice commands activated");
+      window.speechSynthesis.speak(speech);
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
+      console.log("Voice command:", transcript);
+
+      if (transcript.includes("detect") && transcript.includes("object")) {
+        toast({
+          title: "Command recognized",
+          description: "Detecting objects...",
+        });
+        detectObjects();
+      } else if (transcript.includes("read") && transcript.includes("text")) {
+        toast({
+          title: "Command recognized",
+          description: "Reading text...",
+        });
+        readText();
+      } else if (transcript.includes("describe") && transcript.includes("scene")) {
+        toast({
+          title: "Command recognized",
+          description: "Describing scene...",
+        });
+        describeScene();
+      } else if (transcript.includes("stop") && transcript.includes("listening")) {
+        stopVoiceRecognition();
+      }
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error:", event.error);
+      if (event.error === 'no-speech') {
+        return; // Ignore no-speech errors
+      }
+      toast({
+        title: "Recognition error",
+        description: event.error,
+        variant: "destructive",
+      });
+    };
+
+    recognition.onend = () => {
+      if (isListening) {
+        recognition.start(); // Restart if still in listening mode
+      }
+    };
+
+    recognitionRef.current = recognition;
+    recognition.start();
+  };
+
+  const stopVoiceRecognition = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      recognitionRef.current = null;
+      setIsListening(false);
+      toast({
+        title: "Stopped listening",
+        description: "Voice commands deactivated",
+      });
+      
+      const speech = new SpeechSynthesisUtterance("Voice commands deactivated");
+      window.speechSynthesis.speak(speech);
+    }
+  };
+
   useEffect(() => {
     return () => {
       stopCamera();
+      stopVoiceRecognition();
     };
   }, []);
 
@@ -362,6 +457,25 @@ const Camera = () => {
                     <Scan className="mr-2 h-5 w-5" />
                     {isDescribingScene ? "Describing..." : "Describe Scene"}
                   </Button>
+                  {!isListening ? (
+                    <Button
+                      size="lg"
+                      onClick={startVoiceRecognition}
+                      className="bg-gradient-to-r from-green-500 to-green-600 hover:opacity-90"
+                    >
+                      <Mic className="mr-2 h-5 w-5" />
+                      Voice Commands
+                    </Button>
+                  ) : (
+                    <Button
+                      size="lg"
+                      onClick={stopVoiceRecognition}
+                      className="bg-gradient-to-r from-red-500 to-red-600 hover:opacity-90 animate-pulse"
+                    >
+                      <MicOff className="mr-2 h-5 w-5" />
+                      Stop Listening
+                    </Button>
+                  )}
                   <Button
                     size="lg"
                     variant="outline"
@@ -433,9 +547,12 @@ const Camera = () => {
             <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
               <p>
                 <strong className="text-foreground">How to use:</strong> Grant camera access,
-                then point your camera at objects or text. Use "Detect Objects" to identify objects,
-                "Read Text" to extract text, or "Describe Scene" for a detailed description.
-                All features provide audio and text output.
+                then point your camera at objects or text. Click "Voice Commands" and say:
+                <br />• "detect objects" to identify objects
+                <br />• "read text" to extract text
+                <br />• "describe scene" for a detailed description
+                <br />• "stop listening" to deactivate voice commands
+                <br />All features provide audio and text output.
               </p>
             </div>
           </CardContent>
