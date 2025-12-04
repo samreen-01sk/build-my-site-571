@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Camera, FileText, MessageSquare, Brain, Lightbulb, Users } from "lucide-react";
+import { Eye, Camera, FileText, MessageSquare, Brain, Lightbulb, Users, Mic, Waves } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ChatBot } from "@/components/ChatBot";
 
@@ -55,31 +55,30 @@ const Index = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-[hsl(228,60%,12%)] to-[hsl(271,70%,15%)] relative overflow-hidden">
-      {/* Animated background effects */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-[120px] animate-pulse delay-1000" />
-      </div>
-
+    <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-card/40 backdrop-blur-xl border-b border-border/50 z-50">
+      <nav className="fixed top-0 w-full glass z-50 border-b border-border/50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-pulse">
-              Voice-Vision Assistant
-            </h2>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow-blue">
+                <Waves className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <h2 className="text-xl font-bold text-card-foreground">
+                Voice-Vision Assistant
+              </h2>
+            </div>
             <div className="hidden md:flex gap-8">
-              <button onClick={() => scrollToSection('about')} className="text-foreground/80 hover:text-primary transition-colors font-medium">
+              <button onClick={() => scrollToSection('about')} className="text-muted-foreground hover:text-primary transition-colors font-medium text-[15px]">
                 About
               </button>
-              <button onClick={() => scrollToSection('objectives')} className="text-foreground/80 hover:text-primary transition-colors font-medium">
+              <button onClick={() => scrollToSection('objectives')} className="text-muted-foreground hover:text-primary transition-colors font-medium text-[15px]">
                 Objectives
               </button>
-              <button onClick={() => scrollToSection('modules')} className="text-foreground/80 hover:text-primary transition-colors font-medium">
+              <button onClick={() => scrollToSection('modules')} className="text-muted-foreground hover:text-primary transition-colors font-medium text-[15px]">
                 Modules
               </button>
-              <button onClick={() => scrollToSection('team')} className="text-foreground/80 hover:text-primary transition-colors font-medium">
+              <button onClick={() => scrollToSection('team')} className="text-muted-foreground hover:text-primary transition-colors font-medium text-[15px]">
                 Team
               </button>
             </div>
@@ -88,21 +87,26 @@ const Index = () => {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-6 relative">
+      <section className="pt-32 pb-24 px-6 relative overflow-hidden">
+        {/* Subtle gradient orbs */}
+        <div className="absolute top-20 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 w-80 h-80 bg-secondary/10 rounded-full blur-[100px] pointer-events-none" />
+        
         <div className="container mx-auto text-center relative z-10">
-          <Badge className="mb-6 bg-primary/20 text-primary border-primary/50 backdrop-blur-sm px-6 py-2 text-sm font-semibold" variant="outline">
+          <Badge className="mb-6 bg-primary/10 text-primary border-primary/20 px-5 py-2 text-sm font-medium" variant="outline">
             AI-Powered Assistive Technology
           </Badge>
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-foreground animate-in fade-in slide-in-from-bottom-4 duration-1000 leading-tight">
-            Voice-Vision Assistant
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 text-card-foreground animate-fade-in leading-tight tracking-tight">
+            Voice-Vision
+            <span className="bg-gradient-primary bg-clip-text text-transparent"> Assistant</span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-5 duration-1000 delay-200">
+          <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-in leading-relaxed">
             Empowering visually impaired individuals through intelligent computer vision and voice interaction
           </p>
-          <div className="flex flex-wrap gap-4 justify-center animate-in fade-in slide-in-from-bottom-6 duration-1000 delay-300">
+          <div className="flex flex-wrap gap-4 justify-center animate-slide-in-up">
             <Button 
               size="lg" 
-              className="bg-gradient-to-r from-primary to-secondary hover:shadow-[0_0_30px_rgba(59,130,246,0.5)] transition-all duration-300 text-lg px-8 py-6 font-semibold"
+              className="bg-gradient-primary hover:shadow-glow-blue transition-all duration-300 text-base px-8 py-6 font-semibold rounded-xl"
               onClick={() => navigate('/camera')}
             >
               <Camera className="mr-2 h-5 w-5" />
@@ -112,30 +116,44 @@ const Index = () => {
               size="lg" 
               variant="outline"
               onClick={() => scrollToSection('about')}
-              className="border-primary/50 text-foreground hover:bg-primary/10 hover:border-primary backdrop-blur-sm text-lg px-8 py-6 font-semibold"
+              className="border-border hover:border-primary hover:bg-primary/5 text-card-foreground text-base px-8 py-6 font-semibold rounded-xl"
             >
               Learn More
             </Button>
+          </div>
+
+          {/* Voice waveform decoration */}
+          <div className="flex items-center justify-center gap-1 mt-16 opacity-60">
+            {[...Array(12)].map((_, i) => (
+              <div 
+                key={i} 
+                className="w-1 bg-gradient-primary rounded-full animate-waveform"
+                style={{ 
+                  height: `${12 + Math.sin(i * 0.5) * 8}px`,
+                  animationDelay: `${i * 0.1}s` 
+                }}
+              />
+            ))}
           </div>
         </div>
       </section>
 
       {/* Introduction */}
-      <section id="about" className="py-20 px-6 relative">
+      <section id="about" className="py-20 px-6 bg-background-alt">
         <div className="container mx-auto">
           <div className="max-w-4xl mx-auto">
-            <Card className="border border-border/50 hover:shadow-[0_0_50px_rgba(59,130,246,0.2)] transition-all duration-500 bg-card/60 backdrop-blur-xl">
+            <Card className="glass-card shadow-large border-0">
               <CardHeader>
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-3 rounded-lg bg-primary/20 backdrop-blur-sm">
-                    <Lightbulb className="w-8 h-8 text-primary" />
+                <div className="flex items-center gap-4 mb-2">
+                  <div className="p-3 rounded-xl bg-gradient-primary shadow-glow-blue">
+                    <Lightbulb className="w-7 h-7 text-primary-foreground" />
                   </div>
-                  <CardTitle className="text-3xl font-bold text-foreground">Introduction</CardTitle>
+                  <CardTitle className="text-3xl font-bold text-card-foreground">Introduction</CardTitle>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-4 text-muted-foreground text-lg">
+              <CardContent className="space-y-4 text-muted-foreground text-lg leading-relaxed">
                 <p>
-                  Globally, around <strong className="text-primary font-bold">285 million people</strong> are visually impaired, facing challenges in social interaction and access to information.
+                  Globally, around <strong className="text-primary font-semibold">285 million people</strong> are visually impaired, facing challenges in social interaction and access to information.
                 </p>
                 <p>
                   Assistive technologies, especially those integrating voice recognition and computer vision, are crucial for enhancing independence.
@@ -150,23 +168,23 @@ const Index = () => {
       </section>
 
       {/* Objectives */}
-      <section id="objectives" className="py-20 px-6 relative">
+      <section id="objectives" className="py-20 px-6">
         <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-card-foreground tracking-tight">
               Project Objectives
             </h2>
-            <p className="text-xl text-muted-foreground">Our mission to enhance accessibility and independence</p>
+            <p className="text-lg text-muted-foreground">Our mission to enhance accessibility and independence</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
             {objectives.map((objective, index) => (
-              <Card key={index} className="border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] bg-card/60 backdrop-blur-xl group">
+              <Card key={index} className="glass-card border-0 hover:shadow-large transition-all duration-300 group">
                 <CardContent className="pt-6">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-r from-primary to-secondary flex items-center justify-center text-foreground font-bold flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-primary flex items-center justify-center text-primary-foreground font-bold flex-shrink-0 group-hover:scale-110 group-hover:shadow-glow-blue transition-all duration-300">
                       {index + 1}
                     </div>
-                    <p className="text-foreground/90 leading-relaxed">{objective}</p>
+                    <p className="text-card-foreground leading-relaxed">{objective}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -176,23 +194,23 @@ const Index = () => {
       </section>
 
       {/* Modules */}
-      <section id="modules" className="py-20 px-6 relative">
+      <section id="modules" className="py-20 px-6 bg-background-alt">
         <div className="container mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-card-foreground tracking-tight">
               System Modules
             </h2>
-            <p className="text-xl text-muted-foreground">Modular architecture for robust performance</p>
+            <p className="text-lg text-muted-foreground">Modular architecture for robust performance</p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {modules.map((module, index) => (
-              <Card key={index} className="border border-border/50 hover:border-primary/50 transition-all duration-500 hover:shadow-[0_0_40px_rgba(59,130,246,0.2)] group bg-card/60 backdrop-blur-xl">
+              <Card key={index} className="glass-card border-0 hover:shadow-large transition-all duration-500 group">
                 <CardHeader>
-                  <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-lg shadow-primary/50">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-primary flex items-center justify-center mb-5 group-hover:scale-110 group-hover:shadow-glow-blue transition-all duration-300">
                     <module.icon className="w-7 h-7 text-primary-foreground" />
                   </div>
-                  <CardTitle className="text-xl text-foreground font-bold">{module.title}</CardTitle>
-                  <CardDescription className="text-muted-foreground text-base leading-relaxed">
+                  <CardTitle className="text-xl text-card-foreground font-bold">{module.title}</CardTitle>
+                  <CardDescription className="text-muted-foreground text-base leading-relaxed mt-2">
                     {module.description}
                   </CardDescription>
                 </CardHeader>
@@ -203,33 +221,33 @@ const Index = () => {
       </section>
 
       {/* Team Section */}
-      <section id="team" className="py-20 px-6 relative">
+      <section id="team" className="py-20 px-6">
         <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
+          <div className="text-center mb-14">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-card-foreground tracking-tight">
               Our Team
             </h2>
-            <p className="text-xl text-muted-foreground">Government Engineering College, Raichur</p>
-            <p className="text-lg text-muted-foreground">Department of Computer Science & Engineering</p>
+            <p className="text-lg text-muted-foreground">Government Engineering College, Raichur</p>
+            <p className="text-muted-foreground">Department of Computer Science & Engineering</p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {team.map((member, index) => (
-              <Card key={index} className="border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-[0_0_30px_rgba(59,130,246,0.15)] text-center bg-card/60 backdrop-blur-xl group">
+              <Card key={index} className="glass-card border-0 hover:shadow-large transition-all duration-300 text-center group">
                 <CardHeader>
-                  <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-secondary mx-auto mb-3 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-primary/50">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-primary mx-auto mb-4 flex items-center justify-center group-hover:scale-110 group-hover:shadow-glow-blue transition-all duration-300">
                     <Users className="w-8 h-8 text-primary-foreground" />
                   </div>
-                  <CardTitle className="text-lg text-foreground font-bold">{member.name}</CardTitle>
+                  <CardTitle className="text-lg text-card-foreground font-bold">{member.name}</CardTitle>
                   <CardDescription className="text-muted-foreground">{member.id}</CardDescription>
                 </CardHeader>
               </Card>
             ))}
           </div>
 
-          <Card className="border border-border/50 bg-card/60 backdrop-blur-xl hover:shadow-[0_0_40px_rgba(59,130,246,0.2)] transition-all duration-500">
+          <Card className="glass-card border-0 shadow-large">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl text-foreground font-bold">Project Guide</CardTitle>
+              <CardTitle className="text-2xl text-card-foreground font-bold">Project Guide</CardTitle>
               <CardDescription className="text-lg text-muted-foreground">Dr. Shashikala P</CardDescription>
             </CardHeader>
           </Card>
@@ -237,9 +255,9 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="py-8 px-6 border-t border-border/50 bg-card/20 backdrop-blur-sm relative">
+      <footer className="py-8 px-6 border-t border-border bg-background-alt">
         <div className="container mx-auto text-center">
-          <p className="text-muted-foreground">© 2024 Voice-Vision Assistant Project | Government Engineering College, Raichur</p>
+          <p className="text-muted-foreground text-sm">© 2024 Voice-Vision Assistant Project | Government Engineering College, Raichur</p>
         </div>
       </footer>
 

@@ -2,7 +2,7 @@ import { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Camera as CameraIcon, X, Scan, ArrowLeft, Mic, MicOff } from "lucide-react";
+import { Camera as CameraIcon, X, Scan, ArrowLeft, Mic, MicOff, Eye, FileText, Waves } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -76,19 +76,14 @@ const Camera = () => {
     
     if (ctx) {
       ctx.drawImage(video, 0, 0);
-      
-      // Convert canvas to base64 image
       const imageData = canvas.toDataURL("image/jpeg", 0.8);
       
       try {
-        console.log("Sending image for detection...");
-        
         const { data, error } = await supabase.functions.invoke('detect-objects', {
           body: { image: imageData }
         });
 
         if (error) {
-          console.error("Error detecting objects:", error);
           toast({
             title: "Detection failed",
             description: error.message || "Failed to detect objects. Please try again.",
@@ -100,13 +95,10 @@ const Camera = () => {
 
         const detectedObjects = data.objects || [];
         const personCount = data.personCount || 0;
-        console.log("Detected objects:", detectedObjects);
-        console.log("Person count:", personCount);
         
         setDetectedObjects(detectedObjects);
         setPersonCount(personCount);
         
-        // Speak the detected objects and person count
         if (detectedObjects.length > 0) {
           let spokenText = "";
           if (personCount > 0) {
@@ -131,7 +123,6 @@ const Camera = () => {
         }
         
       } catch (error) {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred during detection",
@@ -156,19 +147,14 @@ const Camera = () => {
     
     if (ctx) {
       ctx.drawImage(video, 0, 0);
-      
-      // Convert canvas to base64 image
       const imageData = canvas.toDataURL("image/jpeg", 0.8);
       
       try {
-        console.log("Sending image for text detection...");
-        
         const { data, error } = await supabase.functions.invoke('detect-objects', {
           body: { image: imageData, mode: 'text' }
         });
 
         if (error) {
-          console.error("Error detecting text:", error);
           toast({
             title: "Text detection failed",
             description: error.message || "Failed to detect text. Please try again.",
@@ -179,11 +165,8 @@ const Camera = () => {
         }
 
         const detectedText = data.text || '';
-        console.log("Detected text:", detectedText);
-        
         setDetectedText(detectedText);
         
-        // Speak the detected text
         if (detectedText.trim()) {
           const speech = new SpeechSynthesisUtterance(detectedText);
           window.speechSynthesis.speak(speech);
@@ -200,7 +183,6 @@ const Camera = () => {
         }
         
       } catch (error) {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred during text detection",
@@ -225,19 +207,14 @@ const Camera = () => {
     
     if (ctx) {
       ctx.drawImage(video, 0, 0);
-      
-      // Convert canvas to base64 image
       const imageData = canvas.toDataURL("image/jpeg", 0.8);
       
       try {
-        console.log("Sending image for scene description...");
-        
         const { data, error } = await supabase.functions.invoke('detect-objects', {
           body: { image: imageData, mode: 'scene' }
         });
 
         if (error) {
-          console.error("Error describing scene:", error);
           toast({
             title: "Scene detection failed",
             description: error.message || "Failed to detect scene. Please try again.",
@@ -249,12 +226,10 @@ const Camera = () => {
 
         const description = data.description || 'No description available';
         const confidence = data.confidence || 0;
-        console.log("Scene description:", description, "Confidence:", confidence);
         
         setSceneDescription(description);
         setSceneConfidence(confidence);
         
-        // Speak the detailed scene description
         const speech = new SpeechSynthesisUtterance(description);
         window.speechSynthesis.speak(speech);
         
@@ -264,7 +239,6 @@ const Camera = () => {
         });
         
       } catch (error) {
-        console.error("Error:", error);
         toast({
           title: "Error",
           description: "An error occurred during scene description",
@@ -306,25 +280,15 @@ const Camera = () => {
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
-      console.log("Voice command:", transcript);
 
       if (transcript.includes("detect") && transcript.includes("object")) {
-        toast({
-          title: "Command recognized",
-          description: "Detecting objects...",
-        });
+        toast({ title: "Command recognized", description: "Detecting objects..." });
         detectObjects();
       } else if (transcript.includes("read") && transcript.includes("text")) {
-        toast({
-          title: "Command recognized",
-          description: "Reading text...",
-        });
+        toast({ title: "Command recognized", description: "Reading text..." });
         readText();
       } else if (transcript.includes("describe") && transcript.includes("scene")) {
-        toast({
-          title: "Command recognized",
-          description: "Describing scene...",
-        });
+        toast({ title: "Command recognized", description: "Describing scene..." });
         describeScene();
       } else if (transcript.includes("stop") && transcript.includes("listening")) {
         stopVoiceRecognition();
@@ -332,10 +296,7 @@ const Camera = () => {
     };
 
     recognition.onerror = (event: any) => {
-      console.error("Speech recognition error:", event.error);
-      if (event.error === 'no-speech') {
-        return; // Ignore no-speech errors
-      }
+      if (event.error === 'no-speech') return;
       toast({
         title: "Recognition error",
         description: event.error,
@@ -345,7 +306,7 @@ const Camera = () => {
 
     recognition.onend = () => {
       if (isListening) {
-        recognition.start(); // Restart if still in listening mode
+        recognition.start();
       }
     };
 
@@ -376,29 +337,37 @@ const Camera = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#5B21B6] via-[#A855F7] to-[#F9A8D4] py-8 px-4">
-      <div className="container mx-auto max-w-4xl">
+    <div className="min-h-screen bg-background py-8 px-4">
+      {/* Subtle gradient background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/5 rounded-full blur-[120px]" />
+      </div>
+
+      <div className="container mx-auto max-w-4xl relative z-10">
         <div className="mb-6">
           <Button
             variant="outline"
             onClick={() => navigate("/")}
-            className="bg-white/90"
+            className="border-border hover:border-primary hover:bg-primary/5 transition-all"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Home
           </Button>
         </div>
 
-        <Card className="border-2 bg-white/95 backdrop-blur">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-3 text-3xl">
-              <CameraIcon className="w-8 h-8 text-primary" />
+        <Card className="glass-card border-0 shadow-large overflow-hidden">
+          <CardHeader className="border-b border-border/50">
+            <CardTitle className="flex items-center gap-3 text-2xl md:text-3xl text-card-foreground">
+              <div className="p-2 rounded-xl bg-gradient-primary shadow-glow-blue">
+                <CameraIcon className="w-6 h-6 text-primary-foreground" />
+              </div>
               AI Object Detection
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 p-6">
             {/* Video Feed */}
-            <div className="relative bg-black rounded-lg overflow-hidden aspect-video">
+            <div className="relative bg-card-foreground/5 rounded-2xl overflow-hidden aspect-video border border-border/50">
               <video
                 ref={videoRef}
                 autoPlay
@@ -408,22 +377,33 @@ const Camera = () => {
               <canvas ref={canvasRef} className="hidden" />
               
               {!isStreaming && (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
-                  <div className="text-center text-white">
-                    <CameraIcon className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                    <p className="text-lg">Camera not active</p>
+                <div className="absolute inset-0 flex items-center justify-center bg-background-alt">
+                  <div className="text-center">
+                    <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                      <CameraIcon className="w-10 h-10 text-muted-foreground" />
+                    </div>
+                    <p className="text-lg text-muted-foreground font-medium">Camera not active</p>
+                    <p className="text-sm text-muted-foreground mt-1">Click "Start Camera" to begin</p>
                   </div>
+                </div>
+              )}
+
+              {/* Listening indicator */}
+              {isListening && (
+                <div className="absolute top-4 right-4 flex items-center gap-2 glass px-4 py-2 rounded-full">
+                  <div className="w-3 h-3 bg-destructive rounded-full animate-pulse" />
+                  <span className="text-sm font-medium text-card-foreground">Listening...</span>
                 </div>
               )}
             </div>
 
             {/* Controls */}
-            <div className="flex flex-wrap gap-4 justify-center">
+            <div className="flex flex-wrap gap-3 justify-center">
               {!isStreaming ? (
                 <Button
                   size="lg"
                   onClick={startCamera}
-                  className="bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+                  className="bg-gradient-primary hover:shadow-glow-blue transition-all duration-300 rounded-xl px-8"
                 >
                   <CameraIcon className="mr-2 h-5 w-5" />
                   Start Camera
@@ -434,34 +414,36 @@ const Camera = () => {
                     size="lg"
                     onClick={detectObjects}
                     disabled={isDetecting || isReadingText || isDescribingScene}
-                    className="bg-gradient-to-r from-primary to-secondary hover:opacity-90"
+                    className="bg-gradient-primary hover:shadow-glow-blue transition-all duration-300 rounded-xl"
                   >
-                    <Scan className="mr-2 h-5 w-5" />
+                    <Eye className="mr-2 h-5 w-5" />
                     {isDetecting ? "Detecting..." : "Detect Objects"}
                   </Button>
                   <Button
                     size="lg"
                     onClick={readText}
                     disabled={isDetecting || isReadingText || isDescribingScene}
-                    className="bg-gradient-to-r from-secondary to-primary hover:opacity-90"
+                    className="bg-secondary hover:bg-secondary-hover hover:shadow-glow-cyan transition-all duration-300 rounded-xl"
                   >
-                    <Scan className="mr-2 h-5 w-5" />
+                    <FileText className="mr-2 h-5 w-5" />
                     {isReadingText ? "Reading..." : "Read Text"}
                   </Button>
                   <Button
                     size="lg"
                     onClick={describeScene}
                     disabled={isDetecting || isReadingText || isDescribingScene}
-                    className="bg-gradient-to-r from-primary via-secondary to-primary hover:opacity-90"
+                    className="bg-tertiary hover:opacity-90 hover:shadow-glow-purple transition-all duration-300 rounded-xl"
                   >
                     <Scan className="mr-2 h-5 w-5" />
                     {isDescribingScene ? "Describing..." : "Describe Scene"}
                   </Button>
+                  
+                  {/* Voice Button - Circular with glow */}
                   {!isListening ? (
                     <Button
                       size="lg"
                       onClick={startVoiceRecognition}
-                      className="bg-gradient-to-r from-green-500 to-green-600 hover:opacity-90"
+                      className="bg-gradient-voice hover:shadow-glow-cyan transition-all duration-300 rounded-xl"
                     >
                       <Mic className="mr-2 h-5 w-5" />
                       Voice Commands
@@ -470,16 +452,18 @@ const Camera = () => {
                     <Button
                       size="lg"
                       onClick={stopVoiceRecognition}
-                      className="bg-gradient-to-r from-red-500 to-red-600 hover:opacity-90 animate-pulse"
+                      className="bg-destructive hover:bg-destructive/90 transition-all duration-300 rounded-xl animate-voice-pulse"
                     >
                       <MicOff className="mr-2 h-5 w-5" />
                       Stop Listening
                     </Button>
                   )}
+                  
                   <Button
                     size="lg"
                     variant="outline"
                     onClick={stopCamera}
+                    className="border-border hover:border-destructive hover:text-destructive rounded-xl"
                   >
                     <X className="mr-2 h-5 w-5" />
                     Stop Camera
@@ -488,73 +472,69 @@ const Camera = () => {
               )}
             </div>
 
-            {/* Detected Objects */}
+            {/* Results Section */}
             {detectedObjects.length > 0 && (
-              <div className="space-y-3">
+              <div className="glass-card rounded-2xl p-5 space-y-3 border-0">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold text-foreground">
-                    Detected Objects:
+                  <h3 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
+                    <Eye className="w-5 h-5 text-primary" />
+                    Detected Objects
                   </h3>
                   {personCount > 0 && (
-                    <Badge variant="default" className="text-base py-2 px-4">
+                    <Badge className="bg-primary/10 text-primary border-0 text-sm py-1 px-3">
                       {personCount} {personCount === 1 ? 'person' : 'people'}
                     </Badge>
                   )}
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {detectedObjects.map((object, index) => (
-                    <Badge
-                      key={index}
-                      className="text-base py-2 px-4 bg-gradient-to-r from-primary to-secondary text-white"
-                    >
-                      {object}
+                  {detectedObjects.map((obj, i) => (
+                    <Badge key={i} variant="secondary" className="bg-secondary/10 text-secondary border-0 py-1.5 px-3 text-sm">
+                      {obj}
                     </Badge>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Detected Text */}
             {detectedText && (
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-foreground">
-                  Detected Text:
+              <div className="glass-card rounded-2xl p-5 space-y-3 border-0">
+                <h3 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-secondary" />
+                  Detected Text
                 </h3>
-                <div className="bg-muted rounded-lg p-4">
-                  <p className="text-foreground whitespace-pre-wrap">{detectedText}</p>
-                </div>
+                <p className="text-muted-foreground leading-relaxed bg-background-alt p-4 rounded-xl">
+                  {detectedText}
+                </p>
               </div>
             )}
 
-            {/* Scene Description */}
             {sceneDescription && (
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-foreground">
-                  Scene Description:
-                </h3>
-                <div className="bg-muted rounded-lg p-4 space-y-2">
-                  <p className="text-foreground whitespace-pre-wrap">
-                    {sceneDescription}
-                  </p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    <span className="font-medium">Confidence:</span> {(sceneConfidence * 100).toFixed(1)}%
-                  </p>
+              <div className="glass-card rounded-2xl p-5 space-y-3 border-0">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-card-foreground flex items-center gap-2">
+                    <Waves className="w-5 h-5 text-tertiary" />
+                    Scene Description
+                  </h3>
+                  {sceneConfidence > 0 && (
+                    <Badge className="bg-tertiary/10 text-tertiary border-0 text-sm py-1 px-3">
+                      {Math.round(sceneConfidence * 100)}% confidence
+                    </Badge>
+                  )}
                 </div>
+                <p className="text-muted-foreground leading-relaxed bg-background-alt p-4 rounded-xl">
+                  {sceneDescription}
+                </p>
               </div>
             )}
 
-            {/* Info */}
-            <div className="bg-muted/50 rounded-lg p-4 text-sm text-muted-foreground">
-              <p>
-                <strong className="text-foreground">How to use:</strong> Grant camera access,
-                then point your camera at objects or text. Click "Voice Commands" and say:
-                <br />• "detect objects" to identify objects
-                <br />• "read text" to extract text
-                <br />• "describe scene" for a detailed description
-                <br />• "stop listening" to deactivate voice commands
-                <br />All features provide audio and text output.
-              </p>
-            </div>
+            {/* Voice Commands Help */}
+            {isStreaming && (
+              <div className="text-center p-4 bg-info-light rounded-xl border border-info/20">
+                <p className="text-sm text-muted-foreground">
+                  <strong className="text-card-foreground">Voice Commands:</strong> Say "detect objects", "read text", or "describe scene"
+                </p>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
