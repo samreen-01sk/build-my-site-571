@@ -3,121 +3,115 @@
 @tailwind utilities;
 
 /* 
- * SERENE MINT-TEAL DESIGN SYSTEM
- * A calming, professional color palette for SaaS/productivity applications
- * WCAG AA compliant • Colorblind-friendly • Eye-strain optimized
+ * VOICE & VISION ASSISTANT - LIGHT DESIGN SYSTEM
+ * A bright, calming, accessible interface with sky-blue voice accents
+ * WCAG AA compliant • High contrast • Modern glassmorphism
  * 
- * Brand Personality: Friendly, Trustworthy, Modern-Minimalist with Warmth
- * Target Audience: Professionals and teams aged 25-45
+ * Primary: Sky Blue #3B82F6
+ * Secondary: Cyan #0EA5E9  
+ * Accent: Purple #7C3AED
  */
 
 @layer base {
   :root {
     /* ═══════════════════════════════════════════════════════════════
-     * LIGHT MODE - Serene Mint Theme
+     * LIGHT MODE - Voice & Vision Theme
      * ═══════════════════════════════════════════════════════════════ */
     
-    /* BACKGROUNDS
-     * --background: Main app background (mint-cream) - use for body/page
-     * --background-alt: Alternative sections - use for sidebars, hero sections
-     * --card: Content containers - use for cards, modals, dropdowns
-     */
-    --background: 160 45% 96%;           /* #F2FAF7 - mint-cream */
-    --background-alt: 175 35% 93%;       /* #E6F4F3 - pale aqua */
-    --foreground: 205 38% 17%;           /* #1A2D3B - deep charcoal */
+    /* BACKGROUNDS - Soft neutral light grays */
+    --background: 220 14% 98%;            /* #F9FAFB - very light gray */
+    --background-alt: 220 13% 95%;        /* #F2F4F7 - soft gray */
+    --foreground: 0 0% 10%;               /* #1A1A1A - charcoal */
 
-    --card: 0 0% 100%;                   /* #FFFFFF - pure white */
-    --card-foreground: 205 38% 17%;      /* #1A2D3B */
+    --card: 0 0% 100%;                    /* #FFFFFF - pure white */
+    --card-foreground: 222 47% 11%;       /* #0A1A33 - deep navy */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 205 38% 17%;
+    --popover-foreground: 222 47% 11%;
 
-    /* PRIMARY ACCENT - Calm Teal
+    /* PRIMARY ACCENT - Sky Blue
      * Use for: Main CTAs, active states, links, brand elements
-     * Contrast ratio on white: 4.5:1 ✓
      */
-    --primary: 180 100% 32%;             /* #00A3A3 - calm teal */
-    --primary-hover: 180 100% 27%;       /* #008B8B - hover state */
-    --primary-active: 180 100% 20%;      /* #006666 - active/pressed */
-    --primary-foreground: 0 0% 100%;     /* White text on primary */
+    --primary: 217 91% 60%;               /* #3B82F6 - sky blue */
+    --primary-hover: 217 91% 55%;         /* Darker on hover */
+    --primary-active: 217 91% 50%;        /* Active/pressed */
+    --primary-foreground: 0 0% 100%;      /* White text on primary */
 
-    /* SECONDARY ACCENT - Fresh Mint
-     * Use for: Success states, tags, secondary actions, highlights
+    /* SECONDARY ACCENT - Cyan
+     * Use for: Secondary actions, highlights, success states
      */
-    --secondary: 174 43% 51%;            /* #4DB6AC - fresh mint */
-    --secondary-hover: 174 43% 45%;      /* Darker on hover */
+    --secondary: 199 89% 48%;             /* #0EA5E9 - cyan */
+    --secondary-hover: 199 89% 42%;
     --secondary-foreground: 0 0% 100%;
 
-    /* TERTIARY ACCENT - Warm Peach
-     * Use for: Warnings, highlights, attention-grabbing elements
+    /* TERTIARY ACCENT - Purple
+     * Use for: Special features, premium indicators, voice actions
      */
-    --tertiary: 14 100% 70%;             /* #FF8A65 - sunny peach */
-    --tertiary-foreground: 205 38% 17%;
+    --tertiary: 263 70% 50%;              /* #7C3AED - purple */
+    --tertiary-foreground: 0 0% 100%;
 
-    /* TEXT HIERARCHY
-     * --foreground: Primary text - headings, body text, important content
-     * --muted-foreground: Secondary text - descriptions, captions, labels
-     * --muted: Muted backgrounds for subtle sections
-     */
-    --muted: 200 20% 95%;                /* Light blue-gray bg */
-    --muted-foreground: 200 18% 40%;     /* #546E7A - slate gray */
-    --text-tertiary: 200 17% 62%;        /* #90A4AE - soft blue-gray for hints */
+    /* TEXT HIERARCHY */
+    --muted: 220 14% 96%;                 /* Light gray bg */
+    --muted-foreground: 220 9% 46%;       /* #6B7280 - gray text */
+    --text-tertiary: 220 9% 60%;          /* Lighter hints */
 
-    /* ACCENT (alias for primary in shadcn)  */
-    --accent: 175 35% 93%;               /* Light aqua for hover states */
-    --accent-foreground: 205 38% 17%;
+    /* ACCENT */
+    --accent: 220 14% 96%;
+    --accent-foreground: 222 47% 11%;
 
-    /* SEMANTIC COLORS
-     * Use these for status indicators, alerts, form validation
-     */
-    --success: 170 54% 39%;              /* #2E9B8B - darker mint */
-    --success-light: 170 54% 95%;        /* Light success bg */
+    /* SEMANTIC COLORS */
+    --success: 160 84% 39%;               /* #10B981 - emerald */
+    --success-light: 160 84% 95%;
     --success-foreground: 0 0% 100%;
 
-    --destructive: 0 84% 71%;            /* #FF6B6B - soft coral */
-    --destructive-light: 0 84% 96%;      /* Light error bg */
+    --destructive: 0 84% 60%;             /* #EF4444 - red */
+    --destructive-light: 0 84% 96%;
     --destructive-foreground: 0 0% 100%;
 
-    --warning: 14 100% 63%;              /* #FF7043 - deeper peach */
-    --warning-light: 14 100% 96%;        /* Light warning bg */
-    --warning-foreground: 205 38% 17%;
+    --warning: 38 92% 50%;                /* #F59E0B - amber */
+    --warning-light: 38 92% 95%;
+    --warning-foreground: 0 0% 10%;
 
-    --info: 180 100% 32%;                /* Same as primary teal */
-    --info-light: 180 100% 96%;          /* Light info bg */
+    --info: 217 91% 60%;                  /* Same as primary */
+    --info-light: 217 91% 96%;
     --info-foreground: 0 0% 100%;
 
-    /* BORDERS & DIVIDERS
-     * Use for: Card borders, input borders, table dividers, separators
-     */
-    --border: 210 20% 90%;               /* #E0E6EB - light gray-blue */
-    --border-strong: 210 20% 80%;        /* Stronger borders for focus */
-    --input: 210 20% 90%;
-    --ring: 180 100% 32%;                /* Focus ring - teal */
+    /* BORDERS & DIVIDERS */
+    --border: 220 13% 91%;                /* #E5E7EB - light border */
+    --border-strong: 220 13% 85%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%;                  /* Focus ring - sky blue */
 
-    /* SIDEBAR (if applicable) */
-    --sidebar-background: 175 35% 93%;   /* Pale aqua */
-    --sidebar-foreground: 205 38% 17%;
-    --sidebar-primary: 180 100% 32%;
+    /* SIDEBAR */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 160 45% 96%;
-    --sidebar-accent-foreground: 205 38% 17%;
-    --sidebar-border: 210 20% 87%;
-    --sidebar-ring: 180 100% 32%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 222 47% 11%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217 91% 60%;
 
     /* MISC */
-    --radius: 0.625rem;                  /* 10px - slightly softer radius */
+    --radius: 0.75rem;                    /* 12px - modern rounded */
     
     /* CUSTOM GRADIENTS */
-    --gradient-primary: linear-gradient(135deg, hsl(180 100% 32%) 0%, hsl(174 43% 51%) 100%);
-    --gradient-hero: linear-gradient(180deg, hsl(160 45% 96%) 0%, hsl(175 35% 93%) 50%, hsl(180 100% 97%) 100%);
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%) 0%, hsl(160 45% 98%) 100%);
-    --gradient-warm: linear-gradient(135deg, hsl(14 100% 70%) 0%, hsl(14 100% 63%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(199 89% 48%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(220 14% 98%) 0%, hsl(220 13% 95%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(217 91% 60%) 0%, hsl(263 70% 50%) 100%);
+    --gradient-voice: linear-gradient(135deg, hsl(199 89% 48%) 0%, hsl(217 91% 60%) 50%, hsl(263 70% 50%) 100%);
     
-    /* SHADOWS - Soft and subtle for depth without harshness */
-    --shadow-soft: 0 1px 3px 0 hsl(205 38% 17% / 0.06), 0 1px 2px -1px hsl(205 38% 17% / 0.06);
-    --shadow-medium: 0 4px 6px -1px hsl(205 38% 17% / 0.08), 0 2px 4px -2px hsl(205 38% 17% / 0.06);
-    --shadow-large: 0 10px 15px -3px hsl(205 38% 17% / 0.08), 0 4px 6px -4px hsl(205 38% 17% / 0.06);
-    --shadow-glow: 0 0 20px hsl(180 100% 32% / 0.15);
+    /* SHADOWS */
+    --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.05), 0 1px 2px -1px rgb(0 0 0 / 0.05);
+    --shadow-medium: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    --shadow-large: 0 10px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+    --shadow-glow-blue: 0 0 30px hsl(217 91% 60% / 0.25);
+    --shadow-glow-cyan: 0 0 30px hsl(199 89% 48% / 0.3);
+    --shadow-glow-purple: 0 0 30px hsl(263 70% 50% / 0.25);
+    
+    /* GLASSMORPHISM */
+    --glass-bg: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.5);
     
     /* TRANSITIONS */
     --transition-fast: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
@@ -125,82 +119,74 @@
   }
 
   /* ═══════════════════════════════════════════════════════════════
-   * DARK MODE - Deep Teal Theme
-   * Maintains brand identity while being easy on eyes in low light
+   * DARK MODE
    * ═══════════════════════════════════════════════════════════════ */
   .dark {
-    /* BACKGROUNDS - Deep teal-charcoal tones */
-    --background: 200 30% 10%;           /* #121C21 - deep charcoal with teal */
-    --background-alt: 195 28% 12%;       /* #161F24 - slightly lighter */
-    --foreground: 160 30% 92%;           /* #E5F2ED - light mint */
+    --background: 222 47% 8%;
+    --background-alt: 222 47% 11%;
+    --foreground: 220 14% 96%;
 
-    --card: 200 25% 14%;                 /* #1A252B - elevated surfaces */
-    --card-foreground: 160 30% 92%;
+    --card: 222 47% 11%;
+    --card-foreground: 220 14% 96%;
 
-    --popover: 200 25% 14%;
-    --popover-foreground: 160 30% 92%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 220 14% 96%;
 
-    /* PRIMARY - Brighter teal for dark backgrounds */
-    --primary: 180 70% 45%;              /* #2DB3B3 - brighter teal */
-    --primary-hover: 180 70% 50%;
-    --primary-active: 180 70% 40%;
-    --primary-foreground: 200 30% 10%;   /* Dark text on bright buttons */
+    --primary: 217 91% 65%;
+    --primary-hover: 217 91% 70%;
+    --primary-active: 217 91% 60%;
+    --primary-foreground: 222 47% 8%;
 
-    /* SECONDARY */
-    --secondary: 174 50% 55%;            /* Brighter mint */
-    --secondary-hover: 174 50% 60%;
-    --secondary-foreground: 200 30% 10%;
+    --secondary: 199 89% 55%;
+    --secondary-hover: 199 89% 60%;
+    --secondary-foreground: 222 47% 8%;
 
-    /* TERTIARY */
-    --tertiary: 14 90% 65%;              /* Softer peach */
-    --tertiary-foreground: 200 30% 10%;
+    --tertiary: 263 70% 60%;
+    --tertiary-foreground: 222 47% 8%;
 
-    /* TEXT */
-    --muted: 200 20% 18%;                /* Muted background */
-    --muted-foreground: 200 15% 60%;     /* Muted text */
-    --text-tertiary: 200 15% 50%;        /* Very muted text */
+    --muted: 222 47% 15%;
+    --muted-foreground: 220 9% 60%;
+    --text-tertiary: 220 9% 50%;
 
-    --accent: 200 20% 18%;
-    --accent-foreground: 160 30% 92%;
+    --accent: 222 47% 15%;
+    --accent-foreground: 220 14% 96%;
 
-    /* SEMANTIC - Adjusted for dark mode */
-    --success: 170 50% 50%;
-    --success-light: 170 50% 15%;
-    --success-foreground: 200 30% 10%;
+    --success: 160 84% 45%;
+    --success-light: 160 84% 15%;
+    --success-foreground: 222 47% 8%;
 
-    --destructive: 0 70% 60%;
-    --destructive-light: 0 70% 15%;
-    --destructive-foreground: 160 30% 92%;
+    --destructive: 0 84% 55%;
+    --destructive-light: 0 84% 15%;
+    --destructive-foreground: 220 14% 96%;
 
-    --warning: 14 90% 60%;
-    --warning-light: 14 90% 15%;
-    --warning-foreground: 200 30% 10%;
+    --warning: 38 92% 55%;
+    --warning-light: 38 92% 15%;
+    --warning-foreground: 222 47% 8%;
 
-    --info: 180 70% 45%;
-    --info-light: 180 70% 15%;
-    --info-foreground: 200 30% 10%;
+    --info: 217 91% 65%;
+    --info-light: 217 91% 15%;
+    --info-foreground: 222 47% 8%;
 
-    /* BORDERS */
-    --border: 200 20% 22%;
-    --border-strong: 200 20% 30%;
-    --input: 200 20% 22%;
-    --ring: 180 70% 45%;
+    --border: 222 47% 18%;
+    --border-strong: 222 47% 25%;
+    --input: 222 47% 18%;
+    --ring: 217 91% 65%;
 
-    /* SIDEBAR */
-    --sidebar-background: 195 28% 12%;
-    --sidebar-foreground: 160 30% 92%;
-    --sidebar-primary: 180 70% 45%;
-    --sidebar-primary-foreground: 200 30% 10%;
-    --sidebar-accent: 200 20% 18%;
-    --sidebar-accent-foreground: 160 30% 92%;
-    --sidebar-border: 200 20% 22%;
-    --sidebar-ring: 180 70% 45%;
+    --sidebar-background: 222 47% 11%;
+    --sidebar-foreground: 220 14% 96%;
+    --sidebar-primary: 217 91% 65%;
+    --sidebar-primary-foreground: 222 47% 8%;
+    --sidebar-accent: 222 47% 15%;
+    --sidebar-accent-foreground: 220 14% 96%;
+    --sidebar-border: 222 47% 18%;
+    --sidebar-ring: 217 91% 65%;
 
-    /* SHADOWS - Deeper for dark mode */
-    --shadow-soft: 0 1px 3px 0 hsl(0 0% 0% / 0.3);
-    --shadow-medium: 0 4px 6px -1px hsl(0 0% 0% / 0.4);
-    --shadow-large: 0 10px 15px -3px hsl(0 0% 0% / 0.4);
-    --shadow-glow: 0 0 20px hsl(180 70% 45% / 0.2);
+    --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.3);
+    --shadow-medium: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    --shadow-large: 0 10px 25px -5px rgb(0 0 0 / 0.5);
+    
+    --glass-bg: rgba(15, 23, 42, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.1);
   }
 }
 
@@ -211,9 +197,9 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
-  /* Smooth focus states */
   *:focus-visible {
     @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
@@ -223,12 +209,10 @@
  * UTILITY CLASSES
  * ═══════════════════════════════════════════════════════════════ */
 @layer utilities {
-  /* Text colors */
   .text-tertiary {
     color: hsl(var(--text-tertiary));
   }
 
-  /* Background variants */
   .bg-background-alt {
     background-color: hsl(var(--background-alt));
   }
@@ -240,19 +224,40 @@
   .bg-gradient-hero {
     background: var(--gradient-hero);
   }
-  .bg-gradient-warm {
-    background: var(--gradient-warm);
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
+  .bg-gradient-voice {
+    background: var(--gradient-voice);
+  }
+
+  /* Glassmorphism */
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
   }
 
   /* Shadow utilities */
-  .shadow-soft {
-    box-shadow: var(--shadow-soft);
+  .shadow-glow-blue {
+    box-shadow: var(--shadow-glow-blue);
   }
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
+  .shadow-glow-cyan {
+    box-shadow: var(--shadow-glow-cyan);
+  }
+  .shadow-glow-purple {
+    box-shadow: var(--shadow-glow-purple);
   }
 
-  /* Status badge backgrounds */
+  /* Status backgrounds */
   .bg-success-light {
     background-color: hsl(var(--success-light));
   }
@@ -264,5 +269,39 @@
   }
   .bg-info-light {
     background-color: hsl(var(--info-light));
+  }
+
+  /* Voice button pulse animation */
+  @keyframes voice-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 hsl(199 89% 48% / 0.4);
+    }
+    50% {
+      box-shadow: 0 0 0 15px hsl(199 89% 48% / 0);
+    }
+  }
+
+  .animate-voice-pulse {
+    animation: voice-pulse 2s ease-in-out infinite;
+  }
+
+  /* Waveform animation */
+  @keyframes waveform {
+    0%, 100% { height: 8px; }
+    50% { height: 24px; }
+  }
+
+  .animate-waveform {
+    animation: waveform 0.8s ease-in-out infinite;
+  }
+
+  /* Gentle float animation */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
   }
 }
