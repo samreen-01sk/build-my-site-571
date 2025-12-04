@@ -98,7 +98,7 @@ const Index = () => {
           </Badge>
           <h1 className="text-5xl md:text-7xl font-bold mb-6 text-card-foreground animate-fade-in leading-tight tracking-tight">
             Voice-Vision
-            <span className="bg-gradient-primary bg-clip-text text-transparent"> Assistant</span>
+            <span className="text-primary"> Assistant</span>
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto animate-fade-in leading-relaxed">
             Empowering visually impaired individuals through intelligent computer vision and voice interaction
