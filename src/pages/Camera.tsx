@@ -290,8 +290,20 @@ const Camera = () => {
       } else if (transcript.includes("describe") && transcript.includes("scene")) {
         toast({ title: "Command recognized", description: "Describing scene..." });
         describeScene();
-      } else if (transcript.includes("stop") && transcript.includes("listening")) {
+      } else if (
+        (transcript.includes("stop") || transcript.includes("deactivate") || transcript.includes("disable")) && 
+        (transcript.includes("voice") || transcript.includes("listening") || transcript.includes("command"))
+      ) {
+        toast({ title: "Command recognized", description: "Deactivating voice commands..." });
         stopVoiceRecognition();
+      } else if (
+        (transcript.includes("start") || transcript.includes("activate") || transcript.includes("enable")) && 
+        (transcript.includes("voice") || transcript.includes("command"))
+      ) {
+        // Already listening, just confirm
+        const speech = new SpeechSynthesisUtterance("Voice commands are already active");
+        window.speechSynthesis.speak(speech);
+        toast({ title: "Already active", description: "Voice commands are already listening" });
       }
     };
 
