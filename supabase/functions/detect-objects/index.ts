@@ -15,7 +15,39 @@ serve(async (req) => {
     const { image, mode = 'objects' } = await req.json();
     
     if (!image) {
-      throw new Error('Image data is required');
+      return new Response(
+        JSON.stringify({ error: 'Image data is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate mode parameter
+    const validModes = ['objects', 'text', 'scene'];
+    if (!validModes.includes(mode)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid mode. Must be one of: objects, text, scene' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate base64 image format
+    const base64Regex = /^data:image\/(jpeg|jpg|png|gif|webp);base64,[A-Za-z0-9+/]+=*$/;
+    if (typeof image !== 'string' || !base64Regex.test(image)) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid image format. Must be base64-encoded JPEG, PNG, GIF, or WebP.' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate image size (approximate byte size from base64)
+    const base64Data = image.split(',')[1] || '';
+    const base64Size = base64Data.length * 0.75; // base64 to bytes approximation
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB limit
+    if (base64Size > MAX_SIZE) {
+      return new Response(
+        JSON.stringify({ error: 'Image too large. Maximum size is 10MB.' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
