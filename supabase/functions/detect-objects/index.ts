@@ -61,14 +61,14 @@ serve(async (req) => {
     let userPrompt = '';
 
     if (mode === 'text') {
-      systemPrompt = 'You are a text extraction assistant for visually impaired users. Extract ALL visible text from images accurately. Return ONLY a JSON object with the text. Example: {"text": "Hello World"}';
-      userPrompt = 'Extract all visible text from this image. Include everything you can read.';
+      systemPrompt = 'Extract text from image. Return JSON: {"text": "extracted text"}';
+      userPrompt = 'Extract visible text. Be brief.';
     } else if (mode === 'scene') {
-      systemPrompt = 'You are a concise scene description assistant for voice output. Provide brief, clear descriptions focusing on: (1) Number of people and their primary actions, (2) Key objects or environment features, (3) Any notable movements. Keep descriptions under 2-3 sentences, realistic, and based only on visible details. Return ONLY a JSON object. Example: {"description": "Two people sitting at a table with laptops, working. One is typing while the other reads from their screen. Indoor office setting with a whiteboard visible.", "confidence": 0.95}';
-      userPrompt = 'Give a concise scene description suitable for voice. State who is present, what they are doing, and key visible objects or setting. Keep it brief and realistic, 2-3 sentences maximum.';
+      systemPrompt = 'Describe scene briefly. Return JSON: {"description": "brief description", "confidence": 0.9}';
+      userPrompt = 'Describe in 1 sentence: who/what is visible.';
     } else {
-      systemPrompt = 'You are an object detection assistant for visually impaired users. Analyze images and list ALL visible objects accurately and count people. Return ONLY a JSON object with two fields: "objects" (array of all detected objects) and "personCount" (number of people detected). Example: {"objects": ["person", "person", "chair", "table", "book", "laptop"], "personCount": 2}';
-      userPrompt = 'Analyze this image carefully. List ALL visible objects and count how many people are in the image. Be specific and accurate with object names.';
+      systemPrompt = 'List objects and count people. Return JSON: {"objects": ["item1"], "personCount": 0}';
+      userPrompt = 'List main objects visible and count people.';
     }
 
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -78,7 +78,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'google/gemini-2.5-flash',
+        model: 'google/gemini-2.5-flash-lite',
         messages: [
           {
             role: 'system',
@@ -100,7 +100,8 @@ serve(async (req) => {
             ]
           }
         ],
-        temperature: 0.3,
+        temperature: 0.1,
+        max_tokens: 200,
       }),
     });
 
