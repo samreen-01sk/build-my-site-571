@@ -70,13 +70,16 @@ const Camera = () => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
     
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Reduce resolution for faster processing (max 640px width)
+    const maxWidth = 640;
+    const scale = Math.min(1, maxWidth / video.videoWidth);
+    canvas.width = video.videoWidth * scale;
+    canvas.height = video.videoHeight * scale;
     const ctx = canvas.getContext("2d");
     
     if (ctx) {
-      ctx.drawImage(video, 0, 0);
-      const imageData = canvas.toDataURL("image/jpeg", 0.8);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL("image/jpeg", 0.6);
       
       try {
         const { data, error } = await supabase.functions.invoke('detect-objects', {
@@ -141,13 +144,16 @@ const Camera = () => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
     
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Reduce resolution for faster processing (max 640px width)
+    const maxWidth = 640;
+    const scale = Math.min(1, maxWidth / video.videoWidth);
+    canvas.width = video.videoWidth * scale;
+    canvas.height = video.videoHeight * scale;
     const ctx = canvas.getContext("2d");
     
     if (ctx) {
-      ctx.drawImage(video, 0, 0);
-      const imageData = canvas.toDataURL("image/jpeg", 0.8);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL("image/jpeg", 0.6);
       
       try {
         const { data, error } = await supabase.functions.invoke('detect-objects', {
@@ -201,13 +207,16 @@ const Camera = () => {
     const canvas = canvasRef.current;
     const video = videoRef.current;
     
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Reduce resolution for faster processing (max 640px width)
+    const maxWidth = 640;
+    const scale = Math.min(1, maxWidth / video.videoWidth);
+    canvas.width = video.videoWidth * scale;
+    canvas.height = video.videoHeight * scale;
     const ctx = canvas.getContext("2d");
     
     if (ctx) {
-      ctx.drawImage(video, 0, 0);
-      const imageData = canvas.toDataURL("image/jpeg", 0.8);
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL("image/jpeg", 0.6);
       
       try {
         const { data, error } = await supabase.functions.invoke('detect-objects', {
